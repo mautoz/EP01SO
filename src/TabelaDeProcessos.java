@@ -45,9 +45,9 @@ public class TabelaDeProcessos {
         exe.add(processo);
     }
 
-    public void removerProcessoPronto (ArrayList<BCP> [] b, BCP processo, int credito) {
-        int j = b[credito].indexOf(processo);
-        b[credito].remove(b[credito].get(j));
+    public void removerProcessoPronto (ArrayList<BCP> [] p, BCP processo, int credito) {
+        int j = p[credito].indexOf(processo);
+        p[credito].remove(p[credito].get(j));
     }
 
     public void removerProcessoBloqueado (ArrayList<BCP> b, BCP processo) {

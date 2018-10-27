@@ -61,6 +61,8 @@ public class Escalonador {
     	for (int i = 0; i < b.size(); i++) {
     		if (b.get(i).getEspera() > 0)
     			b.get(i).setEspera(b.get(i).getEspera() - 1);
+    	}
+    	for (int i = 0; i < b.size(); i++) {
     		if (b.get(i).getEspera() == 0) {
     			t.inserirProcessoPronto(p, b.get(i), b.get(i).getCreditos());
     			t.removerProcessoBloqueado(b, b.get(i));
@@ -93,36 +95,59 @@ public class Escalonador {
                 	System.out.println("p[" + i + "].get(j).getCP()  => " + p[i].get(j).getCP());
                 	System.out.println("p[" + i + "].get(j).getComando(p[i].get(j).getCP())  => " + p[i].get(j).getComando(p[i].get(j).getCP()));
                 	
-		            if ("E/S".equals(p[i].get(j).getComando(p[i].get(j).getCP()))) {
-		            	mensagem.escrevendoES(p[i].get(j).getNome());
-		            	System.out.println("E/S");
-		            	p[i].get(j).setCP(p[i].get(j).getCP() + 1);
-		    		}
-		            else if ("COM".equals(p[i].get(j).getComando(p[i].get(j).getCP()))) {
-		            	mensagem.escrevendoES(p[i].get(j).getNome());
-		            	System.out.println("COM");
-		            	p[i].get(j).setCP(p[i].get(j).getCP() + 1);
-		    		}	
-		    		else if (p[i].get(j).getComando(p[i].get(j).getCP()).contains("X=")) {
-		    			String temp = p[i].get(j).getComando(p[i].get(j).getCP());
-		    			setX(Integer.parseInt((temp.substring(2))));
-		    			System.out.println("Integer.parseInt(temp.substring(2)) =>"  + Integer.parseInt(temp.substring(2)));
-		    			mensagem.escrevendoExecutando(p[i].get(j).getNome());
-		    			System.out.println("X="  + getX());
-		    			p[i].get(j).setCP(p[i].get(j).getCP() + 1);
-		    		}		
-		    		else if (p[i].get(j).getComando(p[i].get(j).getCP()).contains("Y=")) {
-		    			String temp = p[i].get(j).getComando(p[i].get(j).getCP());
-		    			setY(Integer.parseInt(temp.substring(2)));
-		    			System.out.println("Integer.parseInt(temp.substring(2)) =>"  + Integer.parseInt(temp.substring(2)));
-		    			mensagem.escrevendoExecutando(p[i].get(j).getNome());
-		    			System.out.println("Y="  + getY());
-		    			p[i].get(j).setCP(p[i].get(j).getCP() + 1);
-		    		}        
-		    		else if ("SAIDA".equals(p[i].get(j).getComando(p[i].get(j).getCP()))) {
-		    			mensagem.escrevendoTerminando(p[i].get(j).getNome(), 0, 0); //Alterar valores 0 e 0 
-		    			t.removerProcessoPronto(p, p[i].get(j), i);
-		    		}
+                	int n_instrucoes = 0;
+                	while (n_instrucoes < p[i].get(j).getQuantum()*getX()) {
+                		p[i].get(j).getEstadoProcesso('e'); //Começou a ser executado
+			            if ("E/S".equals(p[i].get(j).getComando(p[i].get(j).getCP()))) {
+			            	mensagem.escrevendoES(p[i].get(j).getNome());
+			            	System.out.println("E/S");
+			            	p[i].get(j).setCP(p[i].get(j).getCP() + 1); //Atualiza o CP
+			            	p[i].get(j).setEstadoProcesso('b'); //Será bloqueado
+			            	p[i].get(j).setEspera(2); //Settar o tempo de espera
+			            	t.inserirProcessoBloqueado(b, p[i].get(j));
+			            	t.inserirProcessoPronto(p, p[i].get(j), i);
+			    		}
+			            
+			            else if ("COM".equals(p[i].get(j).getComando(p[i].get(j).getCP()))) {
+			            	mensagem.escrevendoES(p[i].get(j).getNome());
+			            	System.out.println("COM");
+			            	p[i].get(j).setCP(p[i].get(j).getCP() + 1);
+			    		}
+			            
+			    		else if (p[i].get(j).getComando(p[i].get(j).getCP()).contains("X=")) {
+			    			String temp = p[i].get(j).getComando(p[i].get(j).getCP());
+			    			setX(Integer.parseInt((temp.substring(2))));
+			    			System.out.println("Integer.parseInt(temp.substring(2)) =>"  + Integer.parseInt(temp.substring(2)));
+			    			mensagem.escrevendoExecutando(p[i].get(j).getNome());
+			    			System.out.println("X="  + getX());
+			    			p[i].get(j).setCP(p[i].get(j).getCP() + 1);
+			    		}
+			            
+			    		else if (p[i].get(j).getComando(p[i].get(j).getCP()).contains("Y=")) {
+			    			String temp = p[i].get(j).getComando(p[i].get(j).getCP());
+			    			setY(Integer.parseInt(temp.substring(2)));
+			    			System.out.println("Integer.parseInt(temp.substring(2)) =>"  + Integer.parseInt(temp.substring(2)));
+			    			mensagem.escrevendoExecutando(p[i].get(j).getNome());
+			    			System.out.println("Y="  + getY());
+			    			p[i].get(j).setCP(p[i].get(j).getCP() + 1);
+			    		}   
+			            
+			    		else if ("SAIDA".equals(p[i].get(j).getComando(p[i].get(j).getCP()))) {
+			    			mensagem.escrevendoTerminando(p[i].get(j).getNome(), 0, 0); //Alterar valores 0 e 0 
+			    			t.removerProcessoPronto(p, p[i].get(j), i);
+			    		}
+			            n_instrucoes++;
+                	}
+                	if (p[i].get(j).getEstadoProcesso() == 'e') {	//Se não foi bloqueado
+                		p[i].get(j).setEstadoProcesso('p');			//ele irá para o Estado 'pronto'
+                		p[i].get(j).setCreditos(p[i].get(j).getCreditos() - 1);
+                		p[i].get(j).setQuantum(p[i].get(j).getQuantum()*2);
+                		
+                		BCP atual = p[i].get(j);					//Atualiza o processo em sua nova
+                		t.removerProcessoPronto(p, atual, i);		//posicao na fila de prioridades
+                		t.inserirProcessoPronto(p, atual, atual.getCreditos());                		
+                	}
+                	
             	}
             }
             
