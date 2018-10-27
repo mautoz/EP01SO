@@ -12,8 +12,8 @@ public class BCP {
     private int quantum;
 
     //contem os valores dos registradores antes do chaveamento
-    private int estadoX;
-    private int estadoY;
+    //private int estadoX;
+    //private int estadoY;
 
     public BCP(String nome){
         this.nome = nome;
@@ -106,31 +106,4 @@ public class BCP {
         this.estadoAtual = estadoAtual;
     }
 
-     /**
-     * @return the estadoX
-     */
-    public int getEstadoX() {
-        return estadoX;
-    }
-
-    /**
-     * @param estadoX the estadoX to set
-     */
-    public void setEstadoX(int estadoX) {
-        this.estadoX = estadoX;
-    }
-
-    /**
-     * @return the estadoY
-     */
-    public int getEstadoY() {
-        return estadoY;
-    }
-
-    /**
-     * @param estadoY the estadoY to set
-     */
-    public void setEstadoY(int estadoY) {
-        this.estadoY = estadoY;
-    }
 }

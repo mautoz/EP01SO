@@ -10,8 +10,24 @@ public class Escalonador {
     private int n_com;
 
     //registradores
-    private int X;
-    private int Y;
+    private static int X;
+    private static int Y;
+    
+    public static void setX (int x) {
+    	X = x;
+    }
+    
+    public static void setY (int y) {
+    	Y = y;
+    }
+    
+    public static int getX () {
+    	return X;
+    }
+    
+    public static int getY () {
+    	return Y;
+    }
 
     public void inicializarArray (int tam) {
         TabelaDeProcessos = (ArrayList<BCP>[])new ArrayList[tam];
@@ -43,6 +59,8 @@ public class Escalonador {
     public void EscalonarProcessos(TabelaDeProcessos t, ArrayList<BCP> [] p, ArrayList<BCP> b,
                                             ArrayList<BCP> e, BCP [] processos, Escrever mensagem,
                                             Ler leitura) throws IOException {
+    	setX(0);
+    	setY(0);
 
         //int tamanho = leitura.gettamArrayList();
     	
@@ -51,30 +69,41 @@ public class Escalonador {
         	//i será para o número de créditos e j o processo da fila
             //Provavelmente está dentro do lugar errado
         	
-        	System.out.println("p.length = " + p.length);
-        	System.out.println("p[0].size() = " + p[0].size());
+        	
         	
         	
             for (int i = 0; i < p.length; i++) {
             	for (int j = 0; j < p[i].size(); j++) {
+            		System.out.println("p.length  => " + p.length);
+                	System.out.println("p[" + i + "].size()  => " + p[i].size());
+                	System.out.println("p[" + i + "].get(j).getNome()  => " + p[i].get(j).getNome());
+                	System.out.println("p[" + i + "].get(j).getCP()  => " + p[i].get(j).getCP());
+                	System.out.println("p[" + i + "].get(j).getComando(p[i].get(j).getCP())  => " + p[i].get(j).getComando(p[i].get(j).getCP()));
+                	
 		            if ("E/S".equals(p[i].get(j).getComando(p[i].get(j).getCP()))) {
 		            	mensagem.escrevendoES(p[i].get(j).getNome());
 		            	System.out.println("E/S");
 		            	p[i].get(j).setCP(p[i].get(j).getCP() + 1);
+		    		}
+		            else if ("COM".equals(p[i].get(j).getComando(p[i].get(j).getCP()))) {
+		            	mensagem.escrevendoES(p[i].get(j).getNome());
+		            	System.out.println("COM");
+		            	p[i].get(j).setCP(p[i].get(j).getCP() + 1);
 		    		}	
 		    		else if (p[i].get(j).getComando(p[i].get(j).getCP()).contains("X=")) {
 		    			String temp = p[i].get(j).getComando(p[i].get(j).getCP());
-		    			p[i].get(j).setEstadoX(Integer.parseInt(temp.substring(2)));
+		    			setX(Integer.parseInt((temp.substring(2))));
+		    			System.out.println("Integer.parseInt(temp.substring(2)) =>"  + Integer.parseInt(temp.substring(2)));
 		    			mensagem.escrevendoExecutando(p[i].get(j).getNome());
-		    			System.out.println("X="  + p[i].get(j).getComando(p[i].get(j).getEstadoX()));
+		    			System.out.println("X="  + getX());
 		    			p[i].get(j).setCP(p[i].get(j).getCP() + 1);
 		    		}		
 		    		else if (p[i].get(j).getComando(p[i].get(j).getCP()).contains("Y=")) {
-		    			p[i].get(j).setCP(p[i].get(j).getCP() + 1);
 		    			String temp = p[i].get(j).getComando(p[i].get(j).getCP());
-		    			p[i].get(j).setEstadoX(Integer.parseInt(temp.substring(2)));
+		    			setY(Integer.parseInt(temp.substring(2)));
+		    			System.out.println("Integer.parseInt(temp.substring(2)) =>"  + Integer.parseInt(temp.substring(2)));
 		    			mensagem.escrevendoExecutando(p[i].get(j).getNome());
-		    			System.out.println("Y="  + p[i].get(j).getComando(p[i].get(j).getEstadoX()));
+		    			System.out.println("Y="  + getY());
 		    			p[i].get(j).setCP(p[i].get(j).getCP() + 1);
 		    		}        
 		    		else if ("SAIDA".equals(p[i].get(j).getComando(p[i].get(j).getCP()))) {
@@ -83,6 +112,15 @@ public class Escalonador {
 		    		}
             	}
             }
+            
+            
+            System.out.println("Valores de saída da lista de prontos");
+            System.out.println("p.length  => " + p.length);
+        	System.out.println("p[0].size()  => " + p[0].size());
+        	System.out.println("p[1].size()  => " + p[1].size());
+        	System.out.println("p[2].size()  => " + p[2].size());
+        	System.out.println("p[3].size()  => " + p[3].size());
+        	System.out.println("p[4].size()  => " + p[4].size());
         	
             /*for (int i = 0;  i < leitura.gettamArrayList(); i++) {
                 for (int j = 0; j < p[i].size(); j++) {
