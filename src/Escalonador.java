@@ -7,7 +7,7 @@ import java.io.IOException;
 public class Escalonador {
 
     ArrayList<BCP>[] TabelaDeProcessos;
-    private int n_com;
+    private static int n_com;
 
     //registradores
     private static int X;
@@ -33,11 +33,11 @@ public class Escalonador {
         TabelaDeProcessos = (ArrayList<BCP>[])new ArrayList[tam];
     }
 
-    public void setNCom (int q) {
-        this.n_com = q;
+    public static void setNCom (int q) {
+        n_com = q;
     }
 
-    public int getNCom () {
+    public static int getNCom () {
         return n_com;
     }
 
@@ -70,6 +70,11 @@ public class Escalonador {
     	}
     }
 
+    public void incrementaCP(BCP processo){
+    	int cp = processo.getCP();
+    	processo.setCP(cp + 1);
+    }
+    
     //Método principal para escalonar os processos
     public void EscalonarProcessos(TabelaDeProcessos t, ArrayList<BCP> [] p, ArrayList<BCP> b,
                                             ArrayList<BCP> e, BCP [] processos, Escrever mensagem,
@@ -81,12 +86,7 @@ public class Escalonador {
     	
         //Loop válido enquanto existem processos bloqueados ou executando
         while (estahVazio(p, leitura) || b.size() > 0) {
-        	//i será para o número de créditos e j o processo da fila
-            //Provavelmente está dentro do lugar errado
-        	
-        	
-        	
-        	
+        	//Será visto fila por fila os processos      	
             for (int i = 0; i < p.length; i++) {
             	while (!p[i].isEmpty()) {
             		System.out.println("p.length  => " + p.length);
@@ -95,70 +95,73 @@ public class Escalonador {
                 	System.out.println("p[" + i + "].get(0).getCP()  => " + p[i].get(0).getCP());
                 	System.out.println("p[" + i + "].get(0).getComando(p[i].get(0).getCP())  => " + p[i].get(0).getComando(p[i].get(0).getCP()));
                 	
+                	BCP processo = p[i].get(0);
+                	int pc = processo.getCP();
+                	String instrucao = processo.getComando(pc);
+                	String processoNome = processo.getNome();                	
+                	
                 	int n_instrucoes = 0;
-                	while (n_instrucoes < p[i].get(0).getQuantum()*getX()) {
-                		p[i].get(0).getEstadoProcesso('e'); //Começou a ser executado
-			            if ("E/S".equals(p[i].get(0).getComando(p[i].get(0).getCP()))) {
-			            	mensagem.escrevendoES(p[i].get(0).getNome());
-			            	System.out.println("E/S");
-			            	p[i].get(0).setCP(p[i].get(0).getCP() + 1); //Atualiza o CP
-			            	p[i].get(0).setEstadoProcesso('b'); //Será bloqueado
+                	while (n_instrucoes < processo.getQuantum()*getNCom()) {
+                		processo.setEstadoProcesso('e'); //Começou a ser executado               		
+                		
+                		
+                    	if(instrucao.equals("COM")) {//COM
+                    		mensagem.escrevendoES(processoNome);
+                        	System.out.println("COM");
+                        	incrementaCP(processo); //incrementa pc
+                        	
+                    	}
+                    	else if(instrucao.contains("X=")) {
+                    		String temp = instrucao;
+                			setX(Integer.parseInt((temp.substring(2)))); //carrega registador
+                			System.out.println("Integer.parseInt(temp.substring(2)) =>"  + Integer.parseInt(temp.substring(2)));//teste, pode apagar?
+                			mensagem.escrevendoExecutando(processoNome);
+                			System.out.println("X="  + getX());//teste
+                			incrementaCP(processo);
+                    	}
+                    	else if (instrucao.contains("Y=")) {
+                    		String temp = instrucao;
+                			setX(Integer.parseInt((temp.substring(2)))); //carrega registador
+                			System.out.println("Integer.parseInt(temp.substring(2)) =>"  + Integer.parseInt(temp.substring(2)));//teste, pode apagar?
+                			mensagem.escrevendoExecutando(processoNome);
+                			System.out.println("X="  + getX());//teste
+                			incrementaCP(processo);
+                		}
+                    	else if (instrucao.equals("SAIDA")) {
+                    		mensagem.escrevendoTerminando(processoNome, 0, 0); //Alterar valores 0 e 0 
+                    		t.removerProcessoPronto(p, p[i].get(0), i);
+                		}
+                    	else if(instrucao.equals("E/S")) {
+                    		mensagem.escrevendoES(processoNome);
+                        	System.out.println("E/S");
+                        	incrementaCP(processo);
+                        	p[i].get(0).setEstadoProcesso('b'); //Será bloqueado
 			            	p[i].get(0).setEspera(2); //Settar o tempo de espera
 			            	t.inserirProcessoBloqueado(b, p[i].get(0));
 			            	t.inserirProcessoPronto(p, p[i].get(0), i);
-			    		}
-			            
-			            else if ("COM".equals(p[i].get(0).getComando(p[i].get(0).getCP()))) {
-			            	mensagem.escrevendoES(p[i].get(0).getNome());
-			            	System.out.println("COM");
-			            	p[i].get(0).setCP(p[i].get(0).getCP() + 1);
-			    		}
-			            
-			    		else if (p[i].get(0).getComando(p[i].get(0).getCP()).contains("X=")) {
-			    			String temp = p[i].get(0).getComando(p[i].get(0).getCP());
-			    			setX(Integer.parseInt((temp.substring(2))));
-			    			System.out.println("Integer.parseInt(temp.substring(2)) =>"  + Integer.parseInt(temp.substring(2)));
-			    			mensagem.escrevendoExecutando(p[i].get(0).getNome());
-			    			System.out.println("X="  + getX());
-			    			p[i].get(0).setCP(p[i].get(0).getCP() + 1);
-			    		}
-			            
-			    		else if (p[i].get(0).getComando(p[i].get(0).getCP()).contains("Y=")) {
-			    			String temp = p[i].get(0).getComando(p[i].get(0).getCP());
-			    			setY(Integer.parseInt(temp.substring(2)));
-			    			System.out.println("Integer.parseInt(temp.substring(2)) =>"  + Integer.parseInt(temp.substring(2)));
-			    			mensagem.escrevendoExecutando(p[i].get(0).getNome());
-			    			System.out.println("Y="  + getY());
-			    			p[i].get(0).setCP(p[i].get(0).getCP() + 1);
-			    		}   
-			            
-			    		else if ("SAIDA".equals(p[i].get(0).getComando(p[i].get(0).getCP()))) {
-			    			mensagem.escrevendoTerminando(p[i].get(0).getNome(), 0, 0); //Alterar valores 0 e 0 
-			    			t.removerProcessoPronto(p, p[i].get(0), i);
-			    		}
+                    	}
 			            n_instrucoes++;
                 	}
-                	if (p[i].get(0).getEstadoProcesso() == 'e') {	//Se não foi bloqueado
-                		p[i].get(0).setEstadoProcesso('p');			//ele irá para o Estado 'pronto'
-                		p[i].get(0).setCreditos(p[i].get(0).getCreditos() - 1);
-                		p[i].get(0).setQuantum(p[i].get(0).getQuantum()*2);
-                		
-                		BCP atual = p[i].get(0);					//Atualiza o processo em sua nova
-                		t.removerProcessoPronto(p, atual, i);		//posicao na fila de prioridades
-                		t.inserirProcessoPronto(p, atual, atual.getCreditos());                		
+                	if (processo.getEstadoProcesso() == 'e') {	//Se não foi bloqueado
+                		processo.setEstadoProcesso('p');			//ele irá para o Estado 'pronto'
+                		processo.setCreditos(processo.getCreditos() - 1);
+                		processo.setQuantum(processo.getQuantum()*2);
+
+                		//Atualiza o processo em sua nova
+                		t.removerProcessoPronto(p, processo, i);		//posicao na fila de prioridades
+                		t.inserirProcessoPronto(p, processo, processo.getCreditos());                		
                 	}
                 	
             	}
             }
             
-            
             System.out.println("Valores de saída da lista de prontos");
             System.out.println("p.length  => " + p.length);
-        	System.out.println("p[0].size()  => " + p[0].size());
-        	System.out.println("p[1].size()  => " + p[1].size());
-        	System.out.println("p[2].size()  => " + p[2].size());
-        	System.out.println("p[3].size()  => " + p[3].size());
-        	System.out.println("p[4].size()  => " + p[4].size());
+        	System.out.println("p[0].size()  => " + p[0].isEmpty());
+        	System.out.println("p[1].size()  => " + p[1].isEmpty());
+        	System.out.println("p[2].size()  => " + p[2].isEmpty());
+        	System.out.println("p[3].size()  => " + p[3].isEmpty());
+        	System.out.println("p[4].size()  => " + p[4].isEmpty());
         	
         	System.out.println("X=" + getX() + "Y=" + getY());
         	
@@ -198,19 +201,19 @@ public class Escalonador {
         BufferedReader lerQuantum = new BufferedReader(quantum);
         String linhaQ = lerQuantum.readLine();
         //Definindo o n_com
-        esc.setNCom(Integer.parseInt(linhaQ));
-        System.out.println("Quantum: " + esc.getNCom ());
+        setNCom(Integer.parseInt(linhaQ));
+        System.out.println("Quantum: " + getNCom ());
         lerQuantum.close();
 
         try {
             //inicializa o logXX.txt. aquivo de saída do programa
-            escrever.criarLog(esc.getNCom ());
+            escrever.criarLog(getNCom ());
             //Começa aleitura dos processos e suas prioridades
             ler.lerArq(bcp, esc, escrever);
 
             esc.inicializarArray(ler.gettamArrayList());
 
-            System.out.println("n_com = " + esc.getNCom());
+            System.out.println("n_com = " + getNCom());
             System.out.println("Exemplo de leitura de comando para o BCP[2]");
 
             for (int k = 0; k < 10; k++) {
@@ -218,7 +221,7 @@ public class Escalonador {
             }
 
             System.out.println("Prioridade do Processo " + bcp[2].getNome() + " é " + bcp[2].getPrioridade());
-            System.out.println("Valor do Quantum " + esc.getNCom());
+            System.out.println("Valor do Quantum " + getNCom());
 
             //Testes com Array List
             //Primeiro: ler todas as 10 prioridades, colocar em ordem e criar um novo
@@ -271,7 +274,7 @@ public class Escalonador {
             esc.EscalonarProcessos (tp, prontos, bloqueados, executando,
                                 bcp, escrever, ler);
 
-            escrever.escrevendo(0, 0.0, esc.getNCom());
+            escrever.escrevendo(0, 0.0, getNCom());
 
 
             //Fechar o arquivo logXX.txt. Não há mais o que escrever
