@@ -3,11 +3,10 @@
 public class BCP {
 
     private String nome;        //Linha 0 de cada processo é o nome
-    private String [] comandos; //Armazenar os comandos de cada processo
+    private String [] comandos; //Armazenar as referências das instruçõe de cada processo
     private int prioridade;
-    private int CP;
+    private int CP;				//Armazena a posição em que parou o 
     private char estadoProcesso; //(e)xecutando, (p)ronto ou (b)loqueado
-    private int referencia;
     private int estadoAtual;
     private int creditos = prioridade;
     private int quantum;
@@ -91,20 +90,6 @@ public class BCP {
      */
     public void setEstadoProcesso(char estadoProcesso) {
         this.estadoProcesso = estadoProcesso;
-    }
-
-    /**
-     * @return the referencia
-     */
-    public int getReferencia() {
-        return referencia;
-    }
-
-    /**
-     * @param referencia the referencia to set
-     */
-    public void setReferencia(int referencia) {
-        this.referencia = referencia;
     }
 
     /**

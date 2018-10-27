@@ -8,22 +8,22 @@ public class Ler {
     private static int [] prioridadesSemRepeticao;
     private static int tamArrayList;
 
-    public static int [] getArrayPrioridades () {
+    public int [] getArrayPrioridades () {
         return prioridades;
     }
 
-    public static int gettamArrayList() {
+    public int gettamArrayList() {
         return tamArrayList;
     }
     //Método inútil, apagar antes de entregar
-    public static void imprimir () {
+    public void imprimir () {
         Arrays.sort(prioridades);
         for (int i = 0; i < prioridades.length; i++)
             System.out.print(prioridades[i] + " ");
     }
 
     //Para preencher a lista de prioridades, é preciso saber a posição
-    public static int getPosicaoDaPrioridade (int p) {
+    public int getPosicaoDaPrioridade (int p) {
         int i = 0;
 
         while (i < prioridadesSemRepeticao.length && prioridadesSemRepeticao[i] != p)
@@ -34,7 +34,7 @@ public class Ler {
 
     //Cria um vetor com as prioridades passadas mas sem repetição.
     //Serve para ter uma posição 'i' para uma prioridade 'p'.
-    public static void numPrioridades (int [] v) {
+    public void numPrioridades (int [] v) {
         int i = 1, j, contador = 1;
 
         Arrays.sort(v);
@@ -45,13 +45,14 @@ public class Ler {
             i++;
         }
 
-        tamArrayList = contador;
+        tamArrayList = contador + 1;
         System.out.println("Contador = " + contador);
 
-        prioridadesSemRepeticao = new int[contador];
-        prioridadesSemRepeticao[0] = prioridades[0];
+        prioridadesSemRepeticao = new int[tamArrayList];
+        prioridadesSemRepeticao[0] = 0; //Quando fica com zero créditos
+        prioridadesSemRepeticao[1] = prioridades[0];
         i = 1;
-        j = 1;
+        j = 2;
         while (i < v.length) {
             if (v[i - 1] != v[i])
                 prioridadesSemRepeticao[j++] = v[i];
@@ -71,7 +72,7 @@ public class Ler {
             System.out.print(prioridadesSemRepeticao[i] + " ");
     }
 
-    public static void lerArq (BCP [] bcp, Escalonador esc, Escrever escrever) throws IOException {
+    public void lerArq (BCP [] bcp, Escalonador esc, Escrever escrever) throws IOException {
         FileReader processos, prior;
         BufferedReader lerProcessos, lerPrior;
 
@@ -100,8 +101,8 @@ public class Ler {
             escrever.escrevendoCarregando(linhaP);
 
             bcp[i - 1].setEstadoProcesso('p');
-            bcp[i - 1].setReferencia(1); //Pois 0 é o nome e as instruções começam no 1
             bcp[i - 1].setPrioridade(Integer.parseInt(linhaPrior));
+            bcp[i - 1].setCP(1);
             System.out.println("Nome: " + bcp[i - 1].getNome());  //Apagar esse print após testes
             System.out.println("Prioridade: " + bcp[i - 1].getPrioridade());
             prioridades[i - 1] = bcp[i - 1].getPrioridade();

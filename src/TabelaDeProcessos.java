@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class TabelaDeProcessos {
     //Precisa inicializar cada uma das Array Lists
-    public static void inicializaArrayList (ArrayList<BCP> [] b, int N) {
+    public void inicializaArrayList (ArrayList<BCP> [] b, int N) {
         System.out.println("N " + N);
 
         for (int i = 0;  i < N; i++) {
@@ -17,7 +17,7 @@ public class TabelaDeProcessos {
     }
 
     //Processo é deixado de forma que fique em ordem alfabética
-    public static void inserirProcessoPronto (ArrayList<BCP> [] b, BCP processo, int posicao) {
+    public void inserirProcessoPronto (ArrayList<BCP> [] b, BCP processo, int posicao) {
         System.out.println("Posicao " + posicao);
         b[posicao].add(processo);
 
@@ -36,25 +36,25 @@ public class TabelaDeProcessos {
     }
 
     //Prioridade não importa, então é só inserir
-    public static void inserirProcessoBloqueado (ArrayList<BCP> b, BCP processo) {
+    public void inserirProcessoBloqueado (ArrayList<BCP> b, BCP processo) {
         b.add(processo);
     }
 
     //Talvez não precise
-    public static void inserirProcessoExecutando (ArrayList<BCP> exe, BCP processo) {
+    public void inserirProcessoExecutando (ArrayList<BCP> exe, BCP processo) {
         exe.add(processo);
     }
 
-    public static void removerProcessoPronto (ArrayList<BCP> [] b, BCP processo, int posicao) {
+    public void removerProcessoPronto (ArrayList<BCP> [] b, BCP processo, int posicao) {
         int j = b[posicao].indexOf(processo);
         b[posicao].remove(b[posicao].get(j));
     }
 
-    public static void removerProcessoBloqueado (ArrayList<BCP> b, BCP processo) {
+    public void removerProcessoBloqueado (ArrayList<BCP> b, BCP processo) {
         b.remove(processo);
     }
 
-    public static void removerProcessoExecutando (ArrayList<BCP> exe, BCP processo) {
+    public void removerProcessoExecutando (ArrayList<BCP> exe, BCP processo) {
         exe.remove(processo);
     }
 

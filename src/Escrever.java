@@ -7,7 +7,7 @@ public class Escrever {
   public static FileWriter arq;
   public static PrintWriter gravarArq;
 
-  public static void criarLog (int X) throws IOException {
+  public void criarLog (int X) throws IOException {
     String outfile;
     StringBuffer buffer = new StringBuffer(40);
 
@@ -60,7 +60,7 @@ public class Escrever {
   public static void main(String[] args) throws IOException {
     Escrever leitura = new Escrever();
     try {
-      Escrever.criarLog(5);
+      leitura.criarLog(5);
       leitura.escrevendo(5, 2.5, 3);
       leitura.escrevendo(6, 7.5, 5);
       leitura.escrevendoCarregando("TESTE-1");

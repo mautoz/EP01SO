@@ -7,7 +7,7 @@ import java.io.IOException;
 public class Escalonador {
 
     ArrayList<BCP>[] TabelaDeProcessos;
-    private static int n_com;
+    private int n_com;
 
     //registradores
     private int X;
@@ -40,14 +40,51 @@ public class Escalonador {
     }
 
     //Método principal para escalonar os processos
-    public static void EscalonarProcessos(TabelaDeProcessos t, ArrayList<BCP> [] p, ArrayList<BCP> b,
+    public void EscalonarProcessos(TabelaDeProcessos t, ArrayList<BCP> [] p, ArrayList<BCP> b,
                                             ArrayList<BCP> e, BCP [] processos, Escrever mensagem,
-                                            Ler leitura) {
+                                            Ler leitura) throws IOException {
 
-        int tamanho = leitura.gettamArrayList();
+        //int tamanho = leitura.gettamArrayList();
+    	
         //Loop válido enquanto existem processos bloqueados ou executando
         while (estahVazio(p, leitura) || b.size() > 0) {
-            for (int i = 0;  i < leitura.gettamArrayList(); i++) {
+        	//i será para o número de créditos e j o processo da fila
+            //Provavelmente está dentro do lugar errado
+        	
+        	System.out.println("p.length = " + p.length);
+        	System.out.println("p[0].size() = " + p[0].size());
+        	
+        	
+            for (int i = 0; i < p.length; i++) {
+            	for (int j = 0; j < p[i].size(); j++) {
+		            if ("E/S".equals(p[i].get(j).getComando(p[i].get(j).getCP()))) {
+		            	mensagem.escrevendoES(p[i].get(j).getNome());
+		            	System.out.println("E/S");
+		            	p[i].get(j).setCP(p[i].get(j).getCP() + 1);
+		    		}	
+		    		else if (p[i].get(j).getComando(p[i].get(j).getCP()).contains("X=")) {
+		    			String temp = p[i].get(j).getComando(p[i].get(j).getCP());
+		    			p[i].get(j).setEstadoX(Integer.parseInt(temp.substring(2)));
+		    			mensagem.escrevendoExecutando(p[i].get(j).getNome());
+		    			System.out.println("X="  + p[i].get(j).getComando(p[i].get(j).getEstadoX()));
+		    			p[i].get(j).setCP(p[i].get(j).getCP() + 1);
+		    		}		
+		    		else if (p[i].get(j).getComando(p[i].get(j).getCP()).contains("Y=")) {
+		    			p[i].get(j).setCP(p[i].get(j).getCP() + 1);
+		    			String temp = p[i].get(j).getComando(p[i].get(j).getCP());
+		    			p[i].get(j).setEstadoX(Integer.parseInt(temp.substring(2)));
+		    			mensagem.escrevendoExecutando(p[i].get(j).getNome());
+		    			System.out.println("Y="  + p[i].get(j).getComando(p[i].get(j).getEstadoX()));
+		    			p[i].get(j).setCP(p[i].get(j).getCP() + 1);
+		    		}        
+		    		else if ("SAIDA".equals(p[i].get(j).getComando(p[i].get(j).getCP()))) {
+		    			mensagem.escrevendoTerminando(p[i].get(j).getNome(), 0, 0); //Alterar valores 0 e 0 
+		    			t.removerProcessoPronto(p, p[i].get(j), i);
+		    		}
+            	}
+            }
+        	
+            /*for (int i = 0;  i < leitura.gettamArrayList(); i++) {
                 for (int j = 0; j < p[i].size(); j++) {
                     BCP aux = p[i].get(j);
                     aux.setQuantum(1);
@@ -57,8 +94,8 @@ public class Escalonador {
                     t.removerProcessoPronto(p, aux, i);
                 }
             }
-            System.out.println();
-        }
+            System.out.println();*/
+        }        
 
         for (BCP aux : e) {
             System.out.println(aux.getNome());
@@ -85,6 +122,7 @@ public class Escalonador {
         //Definindo o n_com
         esc.setNCom(Integer.parseInt(linhaQ));
         System.out.println("Quantum: " + esc.getNCom ());
+        lerQuantum.close();
 
         try {
             //inicializa o logXX.txt. aquivo de saída do programa
@@ -150,8 +188,9 @@ public class Escalonador {
                 System.out.println();
             }
 
+            
             //ESCALONAR
-            EscalonarProcessos (tp, prontos, bloqueados, executando,
+            esc.EscalonarProcessos (tp, prontos, bloqueados, executando,
                                 bcp, escrever, ler);
 
             escrever.escrevendo(0, 0.0, esc.getNCom());
