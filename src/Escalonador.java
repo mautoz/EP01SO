@@ -54,6 +54,19 @@ public class Escalonador {
                 return true;
         return false;
     }
+    
+    //Para cada processo que é executado, é necessário decrementar o valores de 
+    //espera dos processos bloqueados.
+    public void decrementaEsperaBloqueados (TabelaDeProcessos t, ArrayList<BCP> [] p, ArrayList<BCP> b) {
+    	for (int i = 0; i < b.size(); i++) {
+    		if (b.get(i).getEspera() > 0)
+    			b.get(i).setEspera(b.get(i).getEspera() - 1);
+    		if (b.get(i).getEspera() == 0) {
+    			t.inserirProcessoPronto(p, b.get(i), b.get(i).getCreditos());
+    			t.removerProcessoBloqueado(b, b.get(i));
+    		}
+    	}
+    }
 
     //Método principal para escalonar os processos
     public void EscalonarProcessos(TabelaDeProcessos t, ArrayList<BCP> [] p, ArrayList<BCP> b,
@@ -121,6 +134,8 @@ public class Escalonador {
         	System.out.println("p[2].size()  => " + p[2].size());
         	System.out.println("p[3].size()  => " + p[3].size());
         	System.out.println("p[4].size()  => " + p[4].size());
+        	
+        	System.out.println("X=" + getX() + "Y=" + getY());
         	
             /*for (int i = 0;  i < leitura.gettamArrayList(); i++) {
                 for (int j = 0; j < p[i].size(); j++) {

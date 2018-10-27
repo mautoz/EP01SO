@@ -103,6 +103,7 @@ public class Ler {
             bcp[i - 1].setEstadoProcesso('p');
             bcp[i - 1].setPrioridade(Integer.parseInt(linhaPrior));
             bcp[i - 1].setCP(1);
+            bcp[i - 1].setEspera(0);
             System.out.println("Nome: " + bcp[i - 1].getNome());  //Apagar esse print após testes
             System.out.println("Prioridade: " + bcp[i - 1].getPrioridade());
             prioridades[i - 1] = bcp[i - 1].getPrioridade();

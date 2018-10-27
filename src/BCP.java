@@ -10,10 +10,7 @@ public class BCP {
     private int estadoAtual;
     private int creditos = prioridade;
     private int quantum;
-
-    //contem os valores dos registradores antes do chaveamento
-    //private int estadoX;
-    //private int estadoY;
+    private int espera;
 
     public BCP(String nome){
         this.nome = nome;
@@ -99,11 +96,16 @@ public class BCP {
         return estadoAtual;
     }
 
-    /**
-     * @param estadoAtual the estadoAtual to set
-     */
     public void setEstadoAtual(int estadoAtual) {
         this.estadoAtual = estadoAtual;
+    }
+    
+    public int getEspera() {
+        return espera;
+    }
+
+    public void setEspera(int espera) {
+        this.espera = espera;
     }
 
 }
