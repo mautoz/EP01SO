@@ -32,7 +32,6 @@ public class Ler {
                 filename = buffer.append("0").append(i).append(".txt").toString();
             else
                 filename = buffer.append(i).append(".txt").toString();
-            System.out.println(filename);
 
             processos = new FileReader(filename);
             lerProcessos = new BufferedReader(processos);
@@ -56,7 +55,6 @@ public class Ler {
             int j = 0;
             while (linhaP != null) {
                 bcp[i - 1].setComando(linhaP, j++);
-                System.out.println("Comando: " + linhaP);
                 linhaP = lerProcessos.readLine();
             }
 

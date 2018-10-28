@@ -8,28 +8,6 @@ public class Escalonador {
     ArrayList<BCP>[] TabelaDeProcessos;
     private int n_com;
 
-    //registradores
-    /*
-    private static int X;
-    private static int Y;
-    
-    
-    public static void setX (int x) {
-    	X = x;
-    }
-    
-    public static void setY (int y) {
-    	Y = y;
-    }
-    
-    public static int getX () {
-    	return X;
-    }
-    
-    public static int getY () {
-    	return Y;
-    }
-    */
     public void setNCom (int q) {
         n_com = q;
     }
@@ -76,10 +54,7 @@ public class Escalonador {
         	//Será visto fila por fila os processos      	
             for (int i = 0; i < p.length - 1; i++) {	//Loop feito para não passar pelo última posição
             	while (!p[i].isEmpty()) {				//pois é onde fica a fila de créditos 0.
-           	
-            		boolean sair = false;
-                	BCP processo = p[i].get(0);
-                	System.out.println("p[i].get(0): " + p[i].get(0).getNome() + " i: " + i + " p[credito].indexOf(processo): " + p[i].indexOf(p[i].get(0)));
+           	        BCP processo = p[i].get(0);
                 	String processoNome = processo.getNome();
                 	String anterior = processo.getComando(1);
                 	processo.setCreditos(processo.getPrioridade());
@@ -92,7 +67,6 @@ public class Escalonador {
                 		int pc = processo.getCP();
                 		String instrucao = processo.getComando(pc);
                 		if("COM".equals(instrucao)) {//COM
-                        	System.out.println("COM");
                         	incrementaCP(processo); //incrementa pc                       	
                     	}
                     	else if(instrucao.contains("X=")) {
@@ -107,7 +81,6 @@ public class Escalonador {
                 		}
                     	else if("E/S".equals(instrucao)) {
                     		mensagem.escrevendoES(processoNome);
-                        	System.out.println("E/S");
                         	if (processo.getComando(processo.getCP() - 1).equals("COM"))
                         		mensagem.escrevendoInterrompendoESCOM(processoNome, n_instrucoes);
                         	else
@@ -118,10 +91,8 @@ public class Escalonador {
                         	processo.setCreditos(processo.getCreditos() - 1);	//Perde 1 crédito 
                         	processo.setQuantum(processo.getQuantum()*2);		//Recebe o dobro de Quantum
 			            	t.inserirProcessoBloqueado(b, processo);
-			            	System.out.println("Indice I que será apagado: " + i + " " + processo.getNome());
 			            	t.removerProcessoPronto(p, processo, i);
-			            	mensagem.escrevendoInterrompendo(processoNome, n_instrucoes);
-			            	
+			            	mensagem.escrevendoInterrompendo(processoNome, n_instrucoes);            	
 			            	break processo_em_execucao;
                     	}
                     	else if ("SAIDA".equals(instrucao)) {
@@ -143,20 +114,14 @@ public class Escalonador {
                 	}													//então decrementamos os bloqueados.
             	}
             }
-            
-            System.out.println("Estah vazio? " + p[leitura.maxCredito() - 4].isEmpty());
-            System.out.println("Estah vazio? " + p[leitura.maxCredito() - 3].isEmpty());
-            System.out.println("Estah vazio? " + p[leitura.maxCredito() - 2].isEmpty());
-            System.out.println("Estah vazio? " + p[leitura.maxCredito() - 1].isEmpty());
-            System.out.println("Estah vazio? " + p[leitura.maxCredito()].isEmpty());
+
             //Acabou os loops das prioridades diferente de zero
             //pode estar tudo com 0 crédito e/ou bloquados ou só bloqueados
             //então verficamos e se tiver bloqueados, decrementamos.
             if (b.size() > 0)
             	decrementaEsperaBloqueados(t, p, b, leitura);
             
-            System.out.println("p[leitura.maxCredito()].size() +++ " + p[leitura.maxCredito()].size());
-            //Se a fila dos vazios estiver tiver processo e a dos bloqueados estiver 
+          //Se a fila dos vazios estiver tiver processo e a dos bloqueados estiver 
             //vazia, então devemos popular os processos prontos com 
             //os que estavam com zero de prioridade.
             if (!p[leitura.maxCredito()].isEmpty() && b.size() == 0) {
@@ -213,19 +178,17 @@ public class Escalonador {
 
             //Impressão dos processos em ordem da tabela de processos.
             for (int i = 0;  i < ler.maxCredito() + 1; i++) {
-                System.out.println("Posição da Prioridade: " + (ler.maxCredito()-i));
-                for (BCP aux : prontos[i]) {
+                for (BCP aux : prontos[i])
                 	escrever.escrevendoCarregando(aux.getNome());
-                    System.out.println("Nome do processo: " + aux.getNome() + " Prioridade: " + aux.getPrioridade() + " Estado do Processo: " + aux.getEstadoProcesso());
-                }
                 System.out.println();
             }        
-            System.out.println("p.length" + prontos.length);
+
             //ESCALONAR
             esc.EscalonarProcessos (tp, prontos, bloqueados, bcp, escrever, ler);
 
             //Fechar o arquivo logXX.txt. Não há mais o que escrever
             escrever.fecharArq();
+            
         } catch (IOException e) {
             System.err.printf("Erro na abertura do arquivo: %s.\n", e.getMessage());
         }
