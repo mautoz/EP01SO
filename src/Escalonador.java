@@ -48,8 +48,8 @@ public class Escalonador {
     }
 
     //Verifica se a tabela de processos prontos está vazia
-    public static boolean estahVazio (ArrayList<BCP> [] p, Ler leitura) {
-        for (int i = 0; i < leitura.maxCredito(); i++)
+    public static boolean estahCheio (ArrayList<BCP> [] p, Ler leitura) {
+        for (int i = 0; i < leitura.maxCredito() + 1; i++)
             if (p[i].size() != 0)
                 return true;
         return false;
@@ -74,7 +74,7 @@ public class Escalonador {
     	int cp = processo.getCP();
     	processo.setCP(cp + 1);
     }
-/*    
+    
     //Método principal para escalonar os processos
     public void EscalonarProcessos(TabelaDeProcessos t, ArrayList<BCP> [] p, ArrayList<BCP> b,
                                             ArrayList<BCP> e, BCP [] processos, Escrever mensagem,
@@ -85,7 +85,7 @@ public class Escalonador {
         //int tamanho = leitura.gettamArrayList();
     	
         //Loop válido enquanto existem processos bloqueados ou executando
-        while (estahVazio(p, leitura) || b.size() > 0) {
+        while (estahCheio(p, leitura) || b.size() > 0) {
         	//Será visto fila por fila os processos      	
             for (int i = 0; i < p.length - 1; i++) {
             	while (!p[i].isEmpty()) {
@@ -153,6 +153,26 @@ public class Escalonador {
                 	}
             	}
             }
+
+            //Acabou os loops das prioridades diferente de zero
+            //pode tá tudo com 0 crédito e/ou bloquados ou só bloqueados
+            //então verficamos e se tiver bloqueados, decrementamos.
+            if (b.size() > 0)
+            	decrementaEsperaBloqueados(t, p, b, leitura);
+            
+            //Se a fila dos vazios estiver tiver processo e a dos bloqueados estiver 
+            //vazia, então devemos popular os processos prontos com 
+            //os que estavam com zero de prioridade.
+            if (!p[leitura.maxCredito()].isEmpty() && b.size() == 0) {
+            	int indice = leitura.maxCredito();
+            	for (int k = 0; k < p[indice].size(); k++) {
+            		BCP aux = p[indice].get(k);
+            		aux.setEstadoProcesso('p');
+            		aux.setCreditos(aux.getPrioridade());
+            		t.removerProcessoBloqueado(b, aux);
+            		t.inserirProcessoPronto(p, aux, aux.getCreditos(), leitura.maxCredito());
+            	}
+            }
             
             System.out.println("Valores de saída da lista de prontos");
             System.out.println("p.length  => " + p.length);
@@ -160,28 +180,11 @@ public class Escalonador {
         	System.out.println("p[1].size()  => " + p[1].isEmpty());
         	System.out.println("p[2].size()  => " + p[2].isEmpty());
         	System.out.println("p[3].size()  => " + p[3].isEmpty());
-        	System.out.println("p[4].size()  => " + p[4].isEmpty());
-        	
+        	System.out.println("p[4].size()  => " + p[4].isEmpty());        	
         	System.out.println("X=" + getX() + "Y=" + getY());
-        	
-            /*for (int i = 0;  i < leitura.gettamArrayList(); i++) {
-                for (int j = 0; j < p[i].size(); j++) {
-                    BCP aux = p[i].get(j);
-                    aux.setQuantum(1);
-                    aux.setCreditos(aux.getCreditos()-1);
-                    aux.setEstadoProcesso('e');
-                    t.inserirProcessoExecutando(e, aux);
-                    t.removerProcessoPronto(p, aux, i);
-                }
-            }
-            System.out.println();//Colocar o \*\/
         }        
-
-        for (BCP aux : e) {
-            System.out.println(aux.getNome());
-        }
     }
-*/
+
 
     public static void main(String[] args) throws IOException  {
         Ler ler = new Ler();
