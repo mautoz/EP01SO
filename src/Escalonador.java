@@ -43,8 +43,7 @@ public class Escalonador {
         //iniciando X e Y com 0
         X = 0;
         Y = 0;
-    }
-*/
+    }*/
     
     //Verifica se a tabela de processos prontos está vazia
     public static boolean estahCheio (ArrayList<BCP> [] p, Ler leitura) {
