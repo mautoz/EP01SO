@@ -4,26 +4,6 @@ import java.io.IOException;
 
 public class Ler {
     private static int [] prioridades = new int[10];
-    //private static int [] prioridadesSemRepeticao;
-    //private static int tamArrayList;
-
-    //public int [] getArrayPrioridades () {
-    //    return prioridades;
-    //}
-
-    //public int gettamArrayList() {
-    //    return tamArrayList;
-    //}
-
-    //Para preencher a lista de prioridades, é preciso saber a posição
-    /*public int getPosicaoDaPrioridade (int p) {
-        int i = 0;
-
-        while (i < prioridades.length && prioridades[i] != p)
-            i++;
-
-        return i;
-    }*/
 
     //Cria um vetor com as prioridades passadas mas sem repetição.
     //Serve para ter uma posição 'i' para uma prioridade 'p'.
@@ -34,44 +14,6 @@ public class Ler {
     			max = prioridades[i];    	
     	return max;
     }
-    
-    /*public void numPrioridades (int [] v) {
-        int i = 1, j, contador = 1;
-
-        Arrays.sort(v);
-
-        while (i < v.length) {
-            if (prioridades[i] != prioridades[i - 1])
-                contador++;
-            i++;
-        }
-
-        tamArrayList = contador + 1;
-        System.out.println("Contador = " + contador);
-
-        prioridadesSemRepeticao = new int[tamArrayList];
-        prioridadesSemRepeticao[0] = 0; //Quando fica com zero créditos
-        prioridadesSemRepeticao[1] = prioridades[0];
-        i = 1;
-        j = 2;
-        while (i < v.length) {
-            if (v[i - 1] != v[i])
-                prioridadesSemRepeticao[j++] = v[i];
-            i++;
-        }
-        //Precisa criar do maior para o menor, então vamos inverter a lista
-        i = 0;
-        while (i < prioridadesSemRepeticao.length/2) {
-            int temp = prioridadesSemRepeticao[i];
-            prioridadesSemRepeticao[i] = prioridadesSemRepeticao[prioridadesSemRepeticao.length - 1 - i];
-            prioridadesSemRepeticao[prioridadesSemRepeticao.length - 1 - i] = temp;
-            i++;
-        }
-
-        System.out.println("prioridadesSemRepeticao = ");
-        for (i = 0; i < prioridadesSemRepeticao.length; i++)
-            System.out.print(prioridadesSemRepeticao[i] + " ");
-    }*/
 
     public void lerArq (BCP [] bcp, Escalonador esc, Escrever escrever) throws IOException {
         FileReader processos, prior;
@@ -120,9 +62,5 @@ public class Ler {
             processos.close();
         }
         prior.close();
-    }
-
-    public static void main(String[] args) throws IOException {
-    	
     }
 }

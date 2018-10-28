@@ -222,9 +222,10 @@ public class Escalonador {
             System.out.println("Valor do Quantum " + getNCom());
 
             //Inicializar o Arraylist com processos prontos por prioridade
-            //O tamanho é de acordo com ler.gettamArrayList()
-            prontos = (ArrayList<BCP>[])new ArrayList[ler.maxCredito()];
-            tp.inicializaArrayList(prontos, ler.maxCredito());
+            //O tamanho é de acordo com ler.gettamArrayList()   
+            prontos = (ArrayList<BCP>[])new ArrayList[ler.maxCredito() + 1];
+            tp.inicializaArrayList(prontos, ler.maxCredito() + 1);
+            
             System.out.println("\n=================================================+++++++++++++++++++\n");
             System.out.println("Tamanho do bloqueados: " + bloqueados.size());
             System.out.println("Tamanho do prontos[0]: " + prontos[0].size());
@@ -243,8 +244,8 @@ public class Escalonador {
             System.out.println("Lista de Prioridades: ");
             System.out.println();
             //Teste de impressão para verificar se estão corretamente alocados.
-            for (int i = 0;  i < ler.maxCredito(); i++) {
-                System.out.println("Posição da Prioridade: " + (i+1));
+            for (int i = 0;  i < ler.maxCredito() + 1; i++) {
+                System.out.println("Posição da Prioridade: " + (ler.maxCredito()-i));
                 for (BCP aux : prontos[i]) {
                     System.out.println("Nome do processo: " + aux.getNome() + " Prioridade: " + aux.getPrioridade() + " Estado do Processo: " + aux.getEstadoProcesso());
                 }
