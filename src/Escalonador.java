@@ -48,26 +48,28 @@ public class Escalonador {
     //Método principal para escalonar os processos
     public void EscalonarProcessos(TabelaDeProcessos t, ArrayList<BCP> [] p, ArrayList<BCP> b,
                                    BCP [] processos, Escrever mensagem, Ler leitura) throws IOException {
-    	
+    	int numIntrucoesRodadas = 1; //O primeiro processo já conta como 'troca';
+    	int quantQuantas = 0;
         //Loop válido enquanto existem processos bloqueados ou executando
         while (estahCheio(p, leitura) || b.size() > 0) {
         	//Será visto fila por fila os processos      	
-            for (int i = 0; i < p.length - 1; i++) {	//Loop feito para não passar pelo última posição
-            	while (!p[i].isEmpty()) {				//pois é onde fica a fila de créditos 0.
-           	        BCP processo = p[i].get(0);
+            for (int i = 0; i < p.length - 1; i++) {			//Loop feito para não passar pelo última posição
+            	while (!p[i].isEmpty()) {
+            		
+            		BCP processo = p[i].get(0);					//Pega sempre o primeiro da lista.
                 	String processoNome = processo.getNome();
                 	String anterior = processo.getComando(1);
                 	processo.setCreditos(processo.getPrioridade());
-                	processo.setQuantum(1);
+                	processo.setQuantum(1);                	
                 	int n_instrucoes = 0;
                 	mensagem.escrevendoExecutando(processo.getNome());
-                	processo_em_execucao:
+                	processo_em_execucao:	//Label para o break em E/S.
                 	while (n_instrucoes < processo.getQuantum()*getNCom() && !"SAIDA".equals(anterior)) {
-                		processo.setEstadoProcesso('e'); //Começou a ser executado
+                   		processo.setEstadoProcesso('e'); //Começou a ser executado
                 		int pc = processo.getCP();
                 		String instrucao = processo.getComando(pc);
                 		if("COM".equals(instrucao)) {//COM
-                        	incrementaCP(processo); //incrementa pc                       	
+                        	incrementaCP(processo); //incrementa pc
                     	}
                     	else if(instrucao.contains("X=")) {
                     		String temp = instrucao;
@@ -80,8 +82,8 @@ public class Escalonador {
                 			incrementaCP(processo);
                 		}
                     	else if("E/S".equals(instrucao)) {
-                    		mensagem.escrevendoES(processoNome);
-                        	if (processo.getComando(processo.getCP() - 1).equals("COM"))
+                    		mensagem.escrevendoES(processoNome);      
+                        	if ("COM".equals(processo.getComando(processo.getCP() - 1)))
                         		mensagem.escrevendoInterrompendoESCOM(processoNome, n_instrucoes);
                         	else
                         		mensagem.escrevendoInterrompendo(processoNome, n_instrucoes);
@@ -92,16 +94,17 @@ public class Escalonador {
                         	processo.setQuantum(processo.getQuantum()*2);		//Recebe o dobro de Quantum
 			            	t.inserirProcessoBloqueado(b, processo);
 			            	t.removerProcessoPronto(p, processo, i);
-			            	mensagem.escrevendoInterrompendo(processoNome, n_instrucoes);            	
+			            	n_instrucoes = processo.getQuantum()*getNCom();	
 			            	break processo_em_execucao;
                     	}
                     	else if ("SAIDA".equals(instrucao)) {
                     		mensagem.escrevendoTerminando(processoNome, processo.getEstadoX(), processo.getEstadoY()); //Alterar valores 0 e 0
                     		anterior = instrucao;
-                        	t.removerProcessoPronto(p, processo, i); //Problemas está aqui
-                		}
-			            n_instrucoes++;			            
+                        	t.removerProcessoPronto(p, processo, i); //Problemas está aqui	
+                		} 
+                		numIntrucoesRodadas++; // Cada ciclo é uma instrução rodada
                 	}
+                	quantQuantas++;
                 	if (processo.getEstadoProcesso() == 'e' && !"SAIDA".equals(anterior)) {		//Se não foi bloqueado
                 		processo.setEstadoProcesso('p');			//ele irá para o Estado 'pronto'
                 		processo.setCreditos(processo.getCreditos() - 1);
@@ -121,8 +124,8 @@ public class Escalonador {
             if (b.size() > 0)
             	decrementaEsperaBloqueados(t, p, b, leitura);
             
-          //Se a fila dos vazios estiver tiver processo e a dos bloqueados estiver 
-            //vazia, então devemos popular os processos prontos com 
+            //Se a fila dos processos com 0 créditos possuir processo e a dos bloqueados 
+            //estiver vazia, então devemos repopular a lista dos 'prontos' com 
             //os que estavam com zero de prioridade.
             if (!p[leitura.maxCredito()].isEmpty() && b.size() == 0) {
             	int indice = leitura.maxCredito();				//Pega os elementos de crédito zero e os reinsere na lista de prontos.
@@ -135,7 +138,7 @@ public class Escalonador {
             	}
             }
         }
-        mensagem.escrevendo(0, 0.0, getNCom());
+        mensagem.escrevendo(numIntrucoesRodadas/10, numIntrucoesRodadas/quantQuantas, getNCom());
     }
 
 
@@ -166,7 +169,7 @@ public class Escalonador {
             ler.lerArq(bcp, esc, escrever);
 
             //Inicializar o Arraylist com processos prontos por prioridade
-            //O tamanho é de acordo com ler.gettamArrayList()   
+            //O tamanho é de acordo com ler.gettamArrayList()  
             prontos = (ArrayList<BCP>[])new ArrayList[ler.maxCredito() + 1];
             tp.inicializaArrayList(prontos, ler.maxCredito() + 1);
 
@@ -177,11 +180,9 @@ public class Escalonador {
             }
 
             //Impressão dos processos em ordem da tabela de processos.
-            for (int i = 0;  i < ler.maxCredito() + 1; i++) {
+            for (int i = 0;  i < ler.maxCredito() + 1; i++)
                 for (BCP aux : prontos[i])
-                	escrever.escrevendoCarregando(aux.getNome());
-                System.out.println();
-            }        
+                	escrever.escrevendoCarregando(aux.getNome());       
 
             //ESCALONAR
             esc.EscalonarProcessos (tp, prontos, bloqueados, bcp, escrever, ler);

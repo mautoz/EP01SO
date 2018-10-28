@@ -4,17 +4,27 @@ import java.io.IOException;
 
 public class Ler {
     private static int [] prioridades = new int[10];
+    public static int maximo;
 
-    //Cria um vetor com as prioridades passadas mas sem repetição.
-    //Serve para ter uma posição 'i' para uma prioridade 'p'.
-    public int maxCredito () {
+    //Com as prioridades em um vetor, apenas o maior é
+    //buscado para servir de tamanho máximo na fila de
+    //prioridades de processos prontos.
+    public void prioridadeMax () {
     	int max = prioridades[0];
     	for (int i = 0; i < prioridades.length; i++)
     		if (prioridades[i] > max)
     			max = prioridades[i];
-    	return max;
+    	maximo = max;
+    }
+    
+    //Retorna o valor máximo, isto é, a maior prioridade.
+    public int maxCredito () {
+    	return maximo;
     }
 
+    //Toda a leitura dos 11 '.txt' é feita por aqui.
+    //Leitura do Quantum é feita pelo próprio Escalonador.java 
+    //Nome do programa e prioridade são lidos em paralelo.
     public void lerArq (BCP [] bcp, Escalonador esc, Escrever escrever) throws IOException {
         FileReader processos, prior;
         BufferedReader lerProcessos, lerPrior;
@@ -60,6 +70,7 @@ public class Ler {
 
             processos.close();
         }
+        prioridadeMax();
         prior.close();
     }
 }
