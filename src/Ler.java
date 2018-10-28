@@ -1,40 +1,41 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class Ler {
     private static int [] prioridades = new int[10];
-    private static int [] prioridadesSemRepeticao;
-    private static int tamArrayList;
+    //private static int [] prioridadesSemRepeticao;
+    //private static int tamArrayList;
 
-    public int [] getArrayPrioridades () {
-        return prioridades;
-    }
+    //public int [] getArrayPrioridades () {
+    //    return prioridades;
+    //}
 
-    public int gettamArrayList() {
-        return tamArrayList;
-    }
-    //Método inútil, apagar antes de entregar
-    public void imprimir () {
-        Arrays.sort(prioridades);
-        for (int i = 0; i < prioridades.length; i++)
-            System.out.print(prioridades[i] + " ");
-    }
+    //public int gettamArrayList() {
+    //    return tamArrayList;
+    //}
 
     //Para preencher a lista de prioridades, é preciso saber a posição
-    public int getPosicaoDaPrioridade (int p) {
+    /*public int getPosicaoDaPrioridade (int p) {
         int i = 0;
 
-        while (i < prioridadesSemRepeticao.length && prioridadesSemRepeticao[i] != p)
+        while (i < prioridades.length && prioridades[i] != p)
             i++;
 
         return i;
-    }
+    }*/
 
     //Cria um vetor com as prioridades passadas mas sem repetição.
     //Serve para ter uma posição 'i' para uma prioridade 'p'.
-    public void numPrioridades (int [] v) {
+    public int maxCredito () {
+    	int max = prioridades[0];
+    	for (int i = 0; i < prioridades.length; i++)
+    		if (prioridades[i] > max)
+    			max = prioridades[i];    	
+    	return max;
+    }
+    
+    /*public void numPrioridades (int [] v) {
         int i = 1, j, contador = 1;
 
         Arrays.sort(v);
@@ -70,7 +71,7 @@ public class Ler {
         System.out.println("prioridadesSemRepeticao = ");
         for (i = 0; i < prioridadesSemRepeticao.length; i++)
             System.out.print(prioridadesSemRepeticao[i] + " ");
-    }
+    }*/
 
     public void lerArq (BCP [] bcp, Escalonador esc, Escrever escrever) throws IOException {
         FileReader processos, prior;
@@ -122,6 +123,6 @@ public class Ler {
     }
 
     public static void main(String[] args) throws IOException {
-
+    	
     }
 }

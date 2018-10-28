@@ -47,9 +47,9 @@ public class Escrever {
   }
 
   //Verificar que pode existir informações entre ( )
-  public void escrevendoInterrompendo(String S) throws IOException {
+  public void escrevendoInterrompendo(String S, int n) throws IOException {
     gravarArq = new PrintWriter(arq);
-    gravarArq.println("Carregando " + S);
+    gravarArq.println("Interrompendo " + S + "após " + n + " instruções.");
   }
 
   public void fecharArq () throws IOException {

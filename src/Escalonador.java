@@ -49,7 +49,7 @@ public class Escalonador {
 
     //Verifica se a tabela de processos prontos está vazia
     public static boolean estahVazio (ArrayList<BCP> [] p, Ler leitura) {
-        for (int i = 0; i < leitura.gettamArrayList(); i++)
+        for (int i = 0; i < leitura.maxCredito(); i++)
             if (p[i].size() != 0)
                 return true;
         return false;
@@ -57,14 +57,14 @@ public class Escalonador {
     
     //Para cada processo que é executado, é necessário decrementar o valores de 
     //espera dos processos bloqueados.
-    public void decrementaEsperaBloqueados (TabelaDeProcessos t, ArrayList<BCP> [] p, ArrayList<BCP> b) {
+    public void decrementaEsperaBloqueados (TabelaDeProcessos t, ArrayList<BCP> [] p, ArrayList<BCP> b, Ler l) {
     	for (int i = 0; i < b.size(); i++) {
     		if (b.get(i).getEspera() > 0)
     			b.get(i).setEspera(b.get(i).getEspera() - 1);
     	}
     	for (int i = 0; i < b.size(); i++) {
     		if (b.get(i).getEspera() == 0) {
-    			t.inserirProcessoPronto(p, b.get(i), b.get(i).getCreditos());
+    			t.inserirProcessoPronto(p, b.get(i), b.get(i).getCreditos(), l.maxCredito());
     			t.removerProcessoBloqueado(b, b.get(i));
     		}
     	}
@@ -74,7 +74,7 @@ public class Escalonador {
     	int cp = processo.getCP();
     	processo.setCP(cp + 1);
     }
-    
+/*    
     //Método principal para escalonar os processos
     public void EscalonarProcessos(TabelaDeProcessos t, ArrayList<BCP> [] p, ArrayList<BCP> b,
                                             ArrayList<BCP> e, BCP [] processos, Escrever mensagem,
@@ -87,7 +87,7 @@ public class Escalonador {
         //Loop válido enquanto existem processos bloqueados ou executando
         while (estahVazio(p, leitura) || b.size() > 0) {
         	//Será visto fila por fila os processos      	
-            for (int i = 0; i < p.length; i++) {
+            for (int i = 0; i < p.length - 1; i++) {
             	while (!p[i].isEmpty()) {
             		System.out.println("p.length  => " + p.length);
                 	System.out.println("p[" + i + "].size()  => " + p[i].size());
@@ -101,21 +101,19 @@ public class Escalonador {
                 	String processoNome = processo.getNome();                	
                 	
                 	int n_instrucoes = 0;
+                	processo_em_execucao:
                 	while (n_instrucoes < processo.getQuantum()*getNCom()) {
-                		processo.setEstadoProcesso('e'); //Começou a ser executado               		
-                		
+                		processo.setEstadoProcesso('e'); //Começou a ser executado                		
                 		
                     	if(instrucao.equals("COM")) {//COM
-                    		mensagem.escrevendoES(processoNome);
+                    		mensagem.escrevendoExecutando(processoNome);
                         	System.out.println("COM");
-                        	incrementaCP(processo); //incrementa pc
-                        	
+                        	incrementaCP(processo); //incrementa pc                       	
                     	}
                     	else if(instrucao.contains("X=")) {
                     		String temp = instrucao;
                 			setX(Integer.parseInt((temp.substring(2)))); //carrega registador
                 			System.out.println("Integer.parseInt(temp.substring(2)) =>"  + Integer.parseInt(temp.substring(2)));//teste, pode apagar?
-                			mensagem.escrevendoExecutando(processoNome);
                 			System.out.println("X="  + getX());//teste
                 			incrementaCP(processo);
                     	}
@@ -123,13 +121,8 @@ public class Escalonador {
                     		String temp = instrucao;
                 			setX(Integer.parseInt((temp.substring(2)))); //carrega registador
                 			System.out.println("Integer.parseInt(temp.substring(2)) =>"  + Integer.parseInt(temp.substring(2)));//teste, pode apagar?
-                			mensagem.escrevendoExecutando(processoNome);
                 			System.out.println("X="  + getX());//teste
                 			incrementaCP(processo);
-                		}
-                    	else if (instrucao.equals("SAIDA")) {
-                    		mensagem.escrevendoTerminando(processoNome, 0, 0); //Alterar valores 0 e 0 
-                    		t.removerProcessoPronto(p, p[i].get(0), i);
                 		}
                     	else if(instrucao.equals("E/S")) {
                     		mensagem.escrevendoES(processoNome);
@@ -138,10 +131,17 @@ public class Escalonador {
                         	p[i].get(0).setEstadoProcesso('b'); //Será bloqueado
 			            	p[i].get(0).setEspera(2); //Settar o tempo de espera
 			            	t.inserirProcessoBloqueado(b, p[i].get(0));
-			            	t.inserirProcessoPronto(p, p[i].get(0), i);
+			            	t.inserirProcessoPronto(p, p[i].get(0), i, leitura.maxCredito());
+			            	mensagem.escrevendoInterrompendo(processoNome, n_instrucoes);
+			            	break processo_em_execucao;
                     	}
-			            n_instrucoes++;
+                    	else if (instrucao.equals("SAIDA")) {
+                    		mensagem.escrevendoTerminando(processoNome, 0, 0); //Alterar valores 0 e 0 
+                    		t.removerProcessoPronto(p, p[i].get(0), i);
+                		}
+			            n_instrucoes++;			            
                 	}
+        			decrementaEsperaBloqueados(t, p, b, leitura);
                 	if (processo.getEstadoProcesso() == 'e') {	//Se não foi bloqueado
                 		processo.setEstadoProcesso('p');			//ele irá para o Estado 'pronto'
                 		processo.setCreditos(processo.getCreditos() - 1);
@@ -149,9 +149,8 @@ public class Escalonador {
 
                 		//Atualiza o processo em sua nova
                 		t.removerProcessoPronto(p, processo, i);		//posicao na fila de prioridades
-                		t.inserirProcessoPronto(p, processo, processo.getCreditos());                		
+                		t.inserirProcessoPronto(p, processo, processo.getCreditos(), leitura.maxCredito());                		
                 	}
-                	
             	}
             }
             
@@ -175,14 +174,14 @@ public class Escalonador {
                     t.removerProcessoPronto(p, aux, i);
                 }
             }
-            System.out.println();*/
+            System.out.println();//Colocar o \*\/
         }        
 
         for (BCP aux : e) {
             System.out.println(aux.getNome());
         }
     }
-
+*/
 
     public static void main(String[] args) throws IOException  {
         Ler ler = new Ler();
@@ -194,7 +193,6 @@ public class Escalonador {
         //A tabela de processos é composta por ArrayList
         ArrayList<BCP> [] prontos;
         ArrayList<BCP> bloqueados = new ArrayList<>();
-        ArrayList<BCP> executando = new ArrayList<>();
         TabelaDeProcessos tp = new TabelaDeProcessos();
 
         FileReader quantum = new FileReader("quantum.txt");
@@ -211,7 +209,7 @@ public class Escalonador {
             //Começa aleitura dos processos e suas prioridades
             ler.lerArq(bcp, esc, escrever);
 
-            esc.inicializarArray(ler.gettamArrayList());
+            esc.inicializarArray(ler.maxCredito());
 
             System.out.println("n_com = " + getNCom());
             System.out.println("Exemplo de leitura de comando para o BCP[2]");
@@ -223,33 +221,17 @@ public class Escalonador {
             System.out.println("Prioridade do Processo " + bcp[2].getNome() + " é " + bcp[2].getPrioridade());
             System.out.println("Valor do Quantum " + getNCom());
 
-            //Testes com Array List
-            //Primeiro: ler todas as 10 prioridades, colocar em ordem e criar um novo
-            //vetor, mas sem as repetições
-            ler.numPrioridades(ler.getArrayPrioridades());
-
-        //Bloco de Prints para testes, pode apagar
-            for (int i = 0; i < 10; i++)
-                System.out.println(bcp[i].getPrioridade() + " " + ler.getPosicaoDaPrioridade(bcp[i].getPrioridade()) + " ");
-            System.out.println("Size() = " + bloqueados.size());
-            System.out.println("Bloqueados = ");
-            //Como  pegar o processo em remover
-            for(int i = 0; i < bloqueados.size(); i++)
-                System.out.print(bloqueados.get(i).getNome() + "\n");
-            System.out.println("ler.gettamArrayList() " + ler.gettamArrayList());
-        //Fim do bloco de prints para deletar
-
             //Inicializar o Arraylist com processos prontos por prioridade
             //O tamanho é de acordo com ler.gettamArrayList()
-            prontos = (ArrayList<BCP>[])new ArrayList[ler.gettamArrayList()];
-            tp.inicializaArrayList(prontos, ler.gettamArrayList());
+            prontos = (ArrayList<BCP>[])new ArrayList[ler.maxCredito()];
+            tp.inicializaArrayList(prontos, ler.maxCredito());
             System.out.println("\n=================================================+++++++++++++++++++\n");
             System.out.println("Tamanho do bloqueados: " + bloqueados.size());
             System.out.println("Tamanho do prontos[0]: " + prontos[0].size());
 
             for (int i = 0; i < 10; i++) {
-                tp.inserirProcessoPronto(prontos, bcp[i], ler.getPosicaoDaPrioridade(bcp[i].getPrioridade()));
-                //tp.inserirProcessoBloqueado(bloqueados, bcp[i]);
+            	int p = bcp[i].getPrioridade();
+                tp.inserirProcessoPronto(prontos, bcp[i], p, ler.maxCredito());
             }
 
             System.out.println("\n=================================================+++++++++++++++++++\n");
@@ -261,7 +243,7 @@ public class Escalonador {
             System.out.println("Lista de Prioridades: ");
             System.out.println();
             //Teste de impressão para verificar se estão corretamente alocados.
-            for (int i = 0;  i < ler.gettamArrayList(); i++) {
+            for (int i = 0;  i < ler.maxCredito(); i++) {
                 System.out.println("Posição da Prioridade: " + (i+1));
                 for (BCP aux : prontos[i]) {
                     System.out.println("Nome do processo: " + aux.getNome() + " Prioridade: " + aux.getPrioridade() + " Estado do Processo: " + aux.getEstadoProcesso());
@@ -271,8 +253,8 @@ public class Escalonador {
 
             
             //ESCALONAR
-            esc.EscalonarProcessos (tp, prontos, bloqueados, executando,
-                                bcp, escrever, ler);
+            //esc.EscalonarProcessos (tp, prontos, bloqueados, executando,
+            //                    bcp, escrever, ler);
 
             escrever.escrevendo(0, 0.0, getNCom());
 
