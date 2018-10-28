@@ -104,7 +104,7 @@ public class Escalonador {
                 		} 
                 		numIntrucoesRodadas++; // Cada ciclo é uma instrução rodada
                 	}
-                	quantQuantas++;
+                	quantQuantas+=processo.getQuantum();
                 	if (processo.getEstadoProcesso() == 'e' && !"SAIDA".equals(anterior)) {		//Se não foi bloqueado
                 		processo.setEstadoProcesso('p');			//ele irá para o Estado 'pronto'
                 		processo.setCreditos(processo.getCreditos() - 1);
