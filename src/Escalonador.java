@@ -38,13 +38,6 @@ public class Escalonador {
         return n_com;
     }
     
-/*
-    public Escalonador(){
-        //iniciando X e Y com 0
-        X = 0;
-        Y = 0;
-    }*/
-    
     //Verifica se a tabela de processos prontos está vazia
     public static boolean estahCheio (ArrayList<BCP> [] p, Ler leitura) {
         for (int i = 0; i < leitura.maxCredito() + 1; i++)
@@ -63,7 +56,6 @@ public class Escalonador {
     	for (int i = 0; i < b.size(); i++) {
     		if (b.get(i).getEspera() == 0) {
     			b.get(i).setEstadoProcesso('p');
-    			System.out.println("nome: " + b.get(i).getNome() + " Créditos: " + b.get(i).getCreditos());
     			t.inserirProcessoPronto(p, b.get(i), b.get(i).getCreditos(), l.maxCredito());
     			t.removerProcessoBloqueado(b, b.get(i));
     		}
@@ -85,7 +77,9 @@ public class Escalonador {
             for (int i = 0; i < p.length - 1; i++) {	//Loop feito para não passar pelo última posição
             	while (!p[i].isEmpty()) {				//pois é onde fica a fila de créditos 0.
            	
+            		boolean sair = false;
                 	BCP processo = p[i].get(0);
+                	System.out.println("p[i].get(0): " + p[i].get(0).getNome() + " i: " + i + " p[credito].indexOf(processo): " + p[i].indexOf(p[i].get(0)));
                 	String processoNome = processo.getNome();
                 	String anterior = processo.getComando(1);
                 	processo.setCreditos(processo.getPrioridade());
@@ -97,23 +91,18 @@ public class Escalonador {
                 		processo.setEstadoProcesso('e'); //Começou a ser executado
                 		int pc = processo.getCP();
                 		String instrucao = processo.getComando(pc);
-                		System.out.println("nome: " + processo.getNome() + " " + "instrucao: " + instrucao);
-                    	if("COM".equals(instrucao)) {//COM
+                		if("COM".equals(instrucao)) {//COM
                         	System.out.println("COM");
                         	incrementaCP(processo); //incrementa pc                       	
                     	}
                     	else if(instrucao.contains("X=")) {
                     		String temp = instrucao;
                 			processo.setEstadoX(Integer.parseInt((temp.substring(2)))); //carrega registador
-                			System.out.println("Integer.parseInt(temp.substring(2)) =>"  + Integer.parseInt(temp.substring(2)));//teste, pode apagar?
-                			System.out.println("X="  + processo.getEstadoX());//teste
                 			incrementaCP(processo);
                     	}
                     	else if (instrucao.contains("Y=")) {
                     		String temp = instrucao;
                     		processo.setEstadoY(Integer.parseInt((temp.substring(2)))); //carrega registador
-                			System.out.println("Integer.parseInt(temp.substring(2)) =>"  + Integer.parseInt(temp.substring(2)));//teste, pode apagar?
-                			System.out.println("Y="  + processo.getEstadoY());//teste
                 			incrementaCP(processo);
                 		}
                     	else if("E/S".equals(instrucao)) {
@@ -129,14 +118,16 @@ public class Escalonador {
                         	processo.setCreditos(processo.getCreditos() - 1);	//Perde 1 crédito 
                         	processo.setQuantum(processo.getQuantum()*2);		//Recebe o dobro de Quantum
 			            	t.inserirProcessoBloqueado(b, processo);
+			            	System.out.println("Indice I que será apagado: " + i + " " + processo.getNome());
 			            	t.removerProcessoPronto(p, processo, i);
 			            	mensagem.escrevendoInterrompendo(processoNome, n_instrucoes);
+			            	
 			            	break processo_em_execucao;
                     	}
                     	else if ("SAIDA".equals(instrucao)) {
                     		mensagem.escrevendoTerminando(processoNome, processo.getEstadoX(), processo.getEstadoY()); //Alterar valores 0 e 0
                     		anterior = instrucao;
-                    		t.removerProcessoPronto(p, processo, i);
+                        	t.removerProcessoPronto(p, processo, i); //Problemas está aqui
                 		}
 			            n_instrucoes++;			            
                 	}
@@ -145,7 +136,6 @@ public class Escalonador {
                 		processo.setCreditos(processo.getCreditos() - 1);
                 		processo.setQuantum(processo.getQuantum()*2);
                 		//Atualiza o processo em sua nova
-                		System.out.println("i: "+ i);
                 		t.removerProcessoPronto(p, processo, i);		//posicao na fila de prioridades
                 		t.inserirProcessoPronto(p, processo, processo.getCreditos(), leitura.maxCredito());
                 		mensagem.escrevendoInterrompendo(processo.getNome(), n_instrucoes);
@@ -153,13 +143,19 @@ public class Escalonador {
                 	}													//então decrementamos os bloqueados.
             	}
             }
-
+            
+            System.out.println("Estah vazio? " + p[leitura.maxCredito() - 4].isEmpty());
+            System.out.println("Estah vazio? " + p[leitura.maxCredito() - 3].isEmpty());
+            System.out.println("Estah vazio? " + p[leitura.maxCredito() - 2].isEmpty());
+            System.out.println("Estah vazio? " + p[leitura.maxCredito() - 1].isEmpty());
+            System.out.println("Estah vazio? " + p[leitura.maxCredito()].isEmpty());
             //Acabou os loops das prioridades diferente de zero
             //pode estar tudo com 0 crédito e/ou bloquados ou só bloqueados
             //então verficamos e se tiver bloqueados, decrementamos.
             if (b.size() > 0)
             	decrementaEsperaBloqueados(t, p, b, leitura);
             
+            System.out.println("p[leitura.maxCredito()].size() +++ " + p[leitura.maxCredito()].size());
             //Se a fila dos vazios estiver tiver processo e a dos bloqueados estiver 
             //vazia, então devemos popular os processos prontos com 
             //os que estavam com zero de prioridade.
@@ -169,9 +165,8 @@ public class Escalonador {
             		BCP aux = p[indice].get(k);
             		aux.setEstadoProcesso('p');
             		aux.setCreditos(aux.getPrioridade());
-            		t.removerProcessoBloqueado(b, aux);
-            		System.out.println("Inserir: " + aux.getNome() + " aux.getPrioridade()" + aux.getPrioridade());
-            		t.inserirProcessoPronto(p, aux, aux.getPrioridade(), leitura.maxCredito());
+            		t.removerProcessoPronto(p, aux, indice);
+             		t.inserirProcessoPronto(p, aux, aux.getCreditos(), leitura.maxCredito());
             	}
             }
         }
