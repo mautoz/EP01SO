@@ -49,12 +49,12 @@ public class Escrever {
   //Verificar que pode existir informações entre ( )
   public void escrevendoInterrompendoESCOM(String S, int n) throws IOException {
     gravarArq = new PrintWriter(arq);
-    gravarArq.println("Interrompendo " + S + "após " + n + " instruções. (Havia um comando antes da E/S");
+    gravarArq.println("Interrompendo " + S + " após " + n + " instruções. (Havia um comando antes da E/S)");
   }
   //Proceso que será executado
   public void escrevendoInterrompendo(String S, int n) throws IOException {
 	    gravarArq = new PrintWriter(arq);
-	    gravarArq.println("Interrompendo " + S + "após " + n + " instruções.");
+	    gravarArq.println("Interrompendo " + S + " após " + n + " instruções.");
   }
   //Método chamado ao término do Escalonador.java  
   public void fecharArq () throws IOException {

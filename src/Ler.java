@@ -49,7 +49,8 @@ public class Ler {
             bcp[i - 1].setEspera(0);									//Como está pronto, processo é 0
             bcp[i - 1].setEstadoX(0);
             bcp[i - 1].setEstadoY(0);         
-            
+            bcp[i - 1].setCreditos(bcp[i - 1].getPrioridade());
+            bcp[i - 1].setQuantum(1);
             
             //Laço para leitura de todos os comandos do processo 'i'.
             int j = 0;

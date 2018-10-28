@@ -111,4 +111,8 @@ public class BCP {
     public void setEstadoY(int y) {
         this.estadoY = y;
     }
+    
+    public int tamanhoComandos () {
+    	return comandos.length;
+    }
 }

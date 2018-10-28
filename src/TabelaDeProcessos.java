@@ -33,7 +33,7 @@ public class TabelaDeProcessos {
     }
 
     public void removerProcessoPronto (ArrayList<BCP> [] p, BCP processo, int credito) {
-        int j = p[credito].indexOf(processo);
+    	int j = p[credito].indexOf(processo);
         p[credito].remove(p[credito].get(j));
     }
 
