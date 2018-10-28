@@ -1,16 +1,15 @@
-//package so_epiescalonador;
-
 public class BCP {
 
-    private String nome;        //Linha 0 de cada processo é o nome
-    private String [] comandos; //Armazenar as referências das instruçõe de cada processo
-    private int prioridade;
-    private int CP;				//Armazena a posição em que parou o 
-    private char estadoProcesso; //(e)xecutando, (p)ronto ou (b)loqueado
-    private int estadoAtual;
+    private String nome;        	//Linha 0 de cada processo é o Nome do Processo
+    private String [] comandos; 	//Armazenar as referências das instruçõe de cada processo
+    private int prioridade;			//Dada pelo prioridade.txt
+    private int CP;					//Armazena a posição em que parou a leitura das instruções de cada processo 
+    private char estadoProcesso;	//(e)xecutando, (p)ronto ou (b)loqueado
     private int creditos = prioridade;
     private int quantum;
     private int espera;
+    private int estadoX;
+    private int estadoY;
 
     public BCP(String nome){
         this.nome = nome;
@@ -88,17 +87,6 @@ public class BCP {
     public void setEstadoProcesso(char estadoProcesso) {
         this.estadoProcesso = estadoProcesso;
     }
-
-    /**
-     * @return the estadoAtual
-     */
-    public int getEstadoAtual() {
-        return estadoAtual;
-    }
-
-    public void setEstadoAtual(int estadoAtual) {
-        this.estadoAtual = estadoAtual;
-    }
     
     public int getEspera() {
         return espera;
@@ -107,5 +95,20 @@ public class BCP {
     public void setEspera(int espera) {
         this.espera = espera;
     }
+    
+    public int getEstadoX() {
+        return estadoX;
+    }
 
+    public void setEstadoX(int x) {
+        this.estadoX = x;
+    }    
+    
+    public int getEstadoY() {
+        return estadoY;
+    }
+
+    public void setEstadoY(int y) {
+        this.estadoY = y;
+    }
 }

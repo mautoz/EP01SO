@@ -1,5 +1,3 @@
-//package so_epiescalonador;
-
 import java.util.Collections;
 import java.util.ArrayList;
 import java.io.IOException;
@@ -7,18 +5,16 @@ import java.io.IOException;
 public class TabelaDeProcessos {
     //Precisa inicializar cada uma das Array Lists
     public void inicializaArrayList (ArrayList<BCP> [] b, int N) {
-        System.out.println("N " + N);
-
         for (int i = 0;  i < N; i++) {
             b[i] = new ArrayList<>();
         }
-        System.out.println("Fim N " + N);
     }
 
     //Processo é deixado de forma que fique em ordem alfabética
     public void inserirProcessoPronto (ArrayList<BCP> [] b, BCP processo, int posicao, int m) {
-        b[m - posicao].add(processo);
+    	b[m - posicao].add(processo);
         int i = b[m - posicao].size() - 1;
+
         while (i > 0) {
             int j = b[m - posicao].indexOf(processo);
             //String temp = b[posicao].get(j).getNome();
@@ -36,11 +32,6 @@ public class TabelaDeProcessos {
         b.add(processo);
     }
 
-    //Talvez não precise
-    public void inserirProcessoExecutando (ArrayList<BCP> exe, BCP processo) {
-        exe.add(processo);
-    }
-
     public void removerProcessoPronto (ArrayList<BCP> [] p, BCP processo, int credito) {
         int j = p[credito].indexOf(processo);
         p[credito].remove(p[credito].get(j));
@@ -48,10 +39,6 @@ public class TabelaDeProcessos {
 
     public void removerProcessoBloqueado (ArrayList<BCP> b, BCP processo) {
         b.remove(processo);
-    }
-
-    public void removerProcessoExecutando (ArrayList<BCP> exe, BCP processo) {
-        exe.remove(processo);
     }
 
     //**IGNOREM** tudo que está no main é tudo para testes
@@ -67,7 +54,7 @@ public class TabelaDeProcessos {
         try {
             escrever.criarLog(esc.getNCom ());
             ler.lerArq(teste, esc, escrever);
-            esc.inicializarArray(ler.maxCredito());
+            //esc.inicializarArray(ler.maxCredito());
 
             System.out.println("Quantum = " + esc.getNCom());
 
@@ -82,7 +69,7 @@ public class TabelaDeProcessos {
             System.out.println("Valor do Quantum " + esc.getNCom());
 
             //Inicializar o Arraylist com processos prontos por prioridade
-            //O tamanho é de acordo com ler.gettamArrayList()
+            //O tamanho é de acordo com ler.maxCredito() 
             prontos = (ArrayList<BCP>[])new ArrayList[ler.maxCredito() + 1];
             tp.inicializaArrayList(prontos, ler.maxCredito() + 1);
 

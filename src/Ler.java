@@ -11,7 +11,7 @@ public class Ler {
     	int max = prioridades[0];
     	for (int i = 0; i < prioridades.length; i++)
     		if (prioridades[i] > max)
-    			max = prioridades[i];    	
+    			max = prioridades[i];
     	return max;
     }
 
@@ -41,16 +41,16 @@ public class Ler {
             String linhaP = lerProcessos.readLine(); //Linha 0 é o Nome do processo
             String linhaPrior = lerPrior.readLine(); //Linha da prioridade do processo 'i'.
             bcp[i - 1] = new BCP (linhaP);
-            escrever.escrevendoCarregando(linhaP);
-
-            bcp[i - 1].setEstadoProcesso('p');
+            //Settando variáveis default
+            bcp[i - 1].setEstadoProcesso('p');							//Processo Pronto
             bcp[i - 1].setPrioridade(Integer.parseInt(linhaPrior));
-            bcp[i - 1].setCP(1);
-            bcp[i - 1].setEspera(0);
-            System.out.println("Nome: " + bcp[i - 1].getNome());  //Apagar esse print após testes
-            System.out.println("Prioridade: " + bcp[i - 1].getPrioridade());
             prioridades[i - 1] = bcp[i - 1].getPrioridade();
-
+            bcp[i - 1].setCP(1);										//CP padrão 1 pois 0 é o nome do processo
+            bcp[i - 1].setEspera(0);									//Como está pronto, processo é 0
+            bcp[i - 1].setEstadoX(0);
+            bcp[i - 1].setEstadoY(0);         
+            
+            
             //Laço para leitura de todos os comandos do processo 'i'.
             int j = 0;
             while (linhaP != null) {

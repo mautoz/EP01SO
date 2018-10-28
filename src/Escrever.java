@@ -18,57 +18,46 @@ public class Escrever {
         outfile = buffer.append("log").append(X).append(".txt").toString();
     arq = new FileWriter(outfile);
   }
-
+  //Escrita final
   public void escrevendo(int m_trocas, double m_instrucoes, int quantum) throws IOException {
     gravarArq = new PrintWriter(arq);
     gravarArq.println("MEDIA DE TROCAS: " + m_trocas);
     gravarArq.println("MEDIA DE INSTRUCOES: " + m_instrucoes);
     gravarArq.println("QUANTUM: " + quantum + "\n");
   }
-
+  //Processos carregados
   public void escrevendoCarregando(String S) throws IOException {
     gravarArq = new PrintWriter(arq);
     gravarArq.println("Carregando " + S);
   }
-
+  //Proceso que será executado
   public void escrevendoExecutando(String S) throws IOException {
     gravarArq = new PrintWriter(arq);
     gravarArq.println("Executando " + S);
   }
-
+  //Proceso que será executado
   public void escrevendoES(String S) throws IOException {
     gravarArq = new PrintWriter(arq);
     gravarArq.println("E/S iniciada em " + S);
   }
-
+  //Proceso que será executado
   public void escrevendoTerminando(String S, int x, int y) throws IOException {
     gravarArq = new PrintWriter(arq);
     gravarArq.println(S + " terminado. X=" + x + ". Y=" + y);
   }
 
   //Verificar que pode existir informações entre ( )
-  public void escrevendoInterrompendo(String S, int n) throws IOException {
+  public void escrevendoInterrompendoESCOM(String S, int n) throws IOException {
     gravarArq = new PrintWriter(arq);
-    gravarArq.println("Interrompendo " + S + "após " + n + " instruções.");
+    gravarArq.println("Interrompendo " + S + "após " + n + " instruções. (Havia um comando antes da E/S");
   }
-
+  //Proceso que será executado
+  public void escrevendoInterrompendo(String S, int n) throws IOException {
+	    gravarArq = new PrintWriter(arq);
+	    gravarArq.println("Interrompendo " + S + "após " + n + " instruções.");
+  }
+  //Método chamado ao término do Escalonador.java  
   public void fecharArq () throws IOException {
     arq.close();
-  }
-
-  //**IGNOREM** tudo que está no main é tudo para testes
-  public static void main(String[] args) throws IOException {
-    Escrever leitura = new Escrever();
-    try {
-      leitura.criarLog(5);
-      leitura.escrevendo(5, 2.5, 3);
-      leitura.escrevendo(6, 7.5, 5);
-      leitura.escrevendoCarregando("TESTE-1");
-      leitura.escrevendoTerminando("TESTE-2", 2, 3);
-      leitura.fecharArq();
-    }
-    catch (IOException e) {
-      System.err.printf("Erro na abertura do arquivo: %s.\n", e.getMessage());
-    }
   }
 }

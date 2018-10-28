@@ -1,14 +1,10 @@
-Carregando TESTE-1
-Carregando TESTE-2
 Carregando TESTE-3
-Carregando TESTE-4
 Carregando TESTE-5
-Carregando TESTE-6
 Carregando TESTE-7
+Carregando TESTE-2
+Carregando TESTE-4
 Carregando TESTE-8
 Carregando TESTE-9
 Carregando TESTE-10
-MEDIA DE TROCAS: 0
-MEDIA DE INSTRUCOES: 0.0
-QUANTUM: 3
-
+Carregando TESTE-6
+Carregando TESTE-1
