@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.io.IOException;
 
 public class Escalonador {
-
-    ArrayList<BCP>[] TabelaDeProcessos;
     private int n_com;
 
     public void setNCom (int q) {
@@ -45,26 +43,27 @@ public class Escalonador {
     	processo.setCP(cp + 1);
     }
     
-    //Método principal para escalonar os processos
+  //Método principal para escalonar os processos
     public void EscalonarProcessos(TabelaDeProcessos t, ArrayList<BCP> [] p, ArrayList<BCP> b,
                                    BCP [] processos, Escrever mensagem, Ler leitura) throws IOException {
-    	int numIntrucoesRodadas = 1; //O primeiro processo já conta como 'troca';
+    	int numIntrucoesRodadas = 0; //Nenhuma instrucao rodada ate agora;
     	int quantQuantas = 0;
+    	int numChaveamento=1;//executar o processo conta como troca
+    	
         //Loop válido enquanto existem processos bloqueados ou executando
         while (estahCheio(p, leitura) || b.size() > 0) {
         	//Será visto fila por fila os processos      	
             for (int i = 0; i < p.length - 1; i++) {			//Loop feito para não passar pelo última posição
             	while (!p[i].isEmpty()) {
-            		
+            		numChaveamento++;
             		BCP processo = p[i].get(0);					//Pega sempre o primeiro da lista.
                 	String processoNome = processo.getNome();
                 	String anterior = processo.getComando(1);
-                	processo.setCreditos(processo.getPrioridade());
-                	processo.setQuantum(1);                	
+                	                	              	
                 	int n_instrucoes = 0;
                 	mensagem.escrevendoExecutando(processo.getNome());
                 	processo_em_execucao:	//Label para o break em E/S.
-                	while (n_instrucoes < processo.getQuantum()*getNCom() && !"SAIDA".equals(anterior)) {
+                	while (n_instrucoes < processo.getQuantum()*getNCom() && !"SAIDA".equals(anterior)) { //rode as x instrucoes e se o ultimo comando for saidam nao faz nada
                    		processo.setEstadoProcesso('e'); //Começou a ser executado
                 		int pc = processo.getCP();
                 		String instrucao = processo.getComando(pc);
@@ -94,27 +93,29 @@ public class Escalonador {
                         	processo.setQuantum(processo.getQuantum()*2);		//Recebe o dobro de Quantum
 			            	t.inserirProcessoBloqueado(b, processo);
 			            	t.removerProcessoPronto(p, processo, i);
-			            	n_instrucoes = processo.getQuantum()*getNCom();	
 			            	break processo_em_execucao;
                     	}
                     	else if ("SAIDA".equals(instrucao)) {
                     		mensagem.escrevendoTerminando(processoNome, processo.getEstadoX(), processo.getEstadoY()); //Alterar valores 0 e 0
                     		anterior = instrucao;
-                        	t.removerProcessoPronto(p, processo, i); //Problemas está aqui	
+                        	t.removerProcessoPronto(p, processo, i); //Problemas está aqui
                 		} 
+                		n_instrucoes++;//incrementar instrucoes rodadas
                 		numIntrucoesRodadas++; // Cada ciclo é uma instrução rodada
                 	}
-                	quantQuantas+=processo.getQuantum();
+                	quantQuantas++; //incrementa o numero de quantum usado
                 	if (processo.getEstadoProcesso() == 'e' && !"SAIDA".equals(anterior)) {		//Se não foi bloqueado
                 		processo.setEstadoProcesso('p');			//ele irá para o Estado 'pronto'
                 		processo.setCreditos(processo.getCreditos() - 1);
-                		processo.setQuantum(processo.getQuantum()*2);
-                		//Atualiza o processo em sua nova
-                		t.removerProcessoPronto(p, processo, i);		//posicao na fila de prioridades
+                		processo.setQuantum(processo.getQuantum()*2);                		
+                		//Atualiza o processo em sua nova posicao na fila de prioridades
+                		t.removerProcessoPronto(p, processo, i);		
                 		t.inserirProcessoPronto(p, processo, processo.getCreditos(), leitura.maxCredito());
                 		mensagem.escrevendoInterrompendo(processo.getNome(), n_instrucoes);
                 		decrementaEsperaBloqueados(t, p, b, leitura);	//Processo passou pelo estado EXECUTANDO
                 	}													//então decrementamos os bloqueados.
+                	//System.out.println("Processo" + processoNome + "	Quantum: " + processo.getQuantum() );
+                	//System.out.println("quantasTotal: "+quantQuantas + "	InstrRodadas: " + numIntrucoesRodadas+ "	Chaveamentos: " + numChaveamento);
             	}
             }
 
@@ -137,8 +138,10 @@ public class Escalonador {
              		t.inserirProcessoPronto(p, aux, aux.getCreditos(), leitura.maxCredito());
             	}
             }
+            
         }
-        mensagem.escrevendo(numIntrucoesRodadas/10, numIntrucoesRodadas/quantQuantas, getNCom());
+       
+        mensagem.escrevendo((double)numChaveamento/10, (double)numIntrucoesRodadas/quantQuantas, getNCom());
     }
 
 

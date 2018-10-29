@@ -9,7 +9,7 @@ Carregando TESTE-10
 Carregando TESTE-6
 Carregando TESTE-1
 Executando TESTE-3
-Interrompendo TESTE-3 após 5 instruções.
+TESTE-3 terminado. X=4. Y=10
 Executando TESTE-5
 E/S iniciada em TESTE-5
 Interrompendo TESTE-5 após 1 instruções.
@@ -19,13 +19,11 @@ Interrompendo TESTE-7 após 3 instruções. (Havia um comando antes da E/S)
 Executando TESTE-2
 E/S iniciada em TESTE-2
 Interrompendo TESTE-2 após 4 instruções. (Havia um comando antes da E/S)
-Executando TESTE-3
-TESTE-3 terminado. X=4. Y=10
 Executando TESTE-4
 E/S iniciada em TESTE-4
 Interrompendo TESTE-4 após 1 instruções.
 Executando TESTE-8
-Interrompendo TESTE-8 após 5 instruções.
+Interrompendo TESTE-8 após 16 instruções.
 Executando TESTE-9
 E/S iniciada em TESTE-9
 Interrompendo TESTE-9 após 2 instruções. (Havia um comando antes da E/S)
@@ -36,50 +34,46 @@ Executando TESTE-6
 E/S iniciada em TESTE-6
 Interrompendo TESTE-6 após 3 instruções. (Havia um comando antes da E/S)
 Executando TESTE-8
-Interrompendo TESTE-8 após 10 instruções.
-Executando TESTE-2
-E/S iniciada em TESTE-2
-Interrompendo TESTE-2 após 4 instruções. (Havia um comando antes da E/S)
+TESTE-8 terminado. X=1. Y=3
 Executando TESTE-1
 E/S iniciada em TESTE-1
 Interrompendo TESTE-1 após 4 instruções. (Havia um comando antes da E/S)
-Executando TESTE-8
-TESTE-8 terminado. X=1. Y=3
 Executando TESTE-5
 E/S iniciada em TESTE-5
 Interrompendo TESTE-5 após 1 instruções. (Havia um comando antes da E/S)
+Executando TESTE-2
+E/S iniciada em TESTE-2
+Interrompendo TESTE-2 após 4 instruções. (Havia um comando antes da E/S)
 Executando TESTE-7
 E/S iniciada em TESTE-7
 Interrompendo TESTE-7 após 8 instruções. (Havia um comando antes da E/S)
 Executando TESTE-9
-Interrompendo TESTE-9 após 10 instruções.
+E/S iniciada em TESTE-9
+Interrompendo TESTE-9 após 10 instruções. (Havia um comando antes da E/S)
+Executando TESTE-6
+E/S iniciada em TESTE-6
+Interrompendo TESTE-6 após 6 instruções. (Havia um comando antes da E/S)
 Executando TESTE-4
 E/S iniciada em TESTE-4
 Interrompendo TESTE-4 após 1 instruções. (Havia um comando antes da E/S)
 Executando TESTE-2
 E/S iniciada em TESTE-2
 Interrompendo TESTE-2 após 4 instruções. (Havia um comando antes da E/S)
-Executando TESTE-6
-E/S iniciada em TESTE-6
-Interrompendo TESTE-6 após 6 instruções. (Havia um comando antes da E/S)
-Executando TESTE-9
-E/S iniciada em TESTE-9
-Interrompendo TESTE-9 após 0 instruções. (Havia um comando antes da E/S)
+Executando TESTE-7
+TESTE-7 terminado. X=12. Y=3
+Executando TESTE-10
+TESTE-10 terminado. X=0. Y=0
 Executando TESTE-5
 E/S iniciada em TESTE-5
 Interrompendo TESTE-5 após 1 instruções.
-Executando TESTE-10
-TESTE-10 terminado. X=0. Y=0
 Executando TESTE-4
 E/S iniciada em TESTE-4
 Interrompendo TESTE-4 após 1 instruções.
-Executando TESTE-7
-TESTE-7 terminado. X=12. Y=3
+Executando TESTE-9
+TESTE-9 terminado. X=0. Y=0
 Executando TESTE-4
 E/S iniciada em TESTE-4
 Interrompendo TESTE-4 após 1 instruções. (Havia um comando antes da E/S)
-Executando TESTE-9
-TESTE-9 terminado. X=0. Y=0
 Executando TESTE-1
 E/S iniciada em TESTE-1
 Interrompendo TESTE-1 após 3 instruções. (Havia um comando antes da E/S)
@@ -105,6 +99,6 @@ E/S iniciada em TESTE-6
 Interrompendo TESTE-6 após 2 instruções. (Havia um comando antes da E/S)
 Executando TESTE-6
 TESTE-6 terminado. X=8. Y=5
-MEDIA DE TROCAS: 3.8
-MEDIA DE INSTRUCOES: 3.135135135135135
-QUANTUM: 5
+MEDIA DE TROCAS: 3.5
+MEDIA DE INSTRUCOES: 3.411764705882353
+QUANTUM: 16
