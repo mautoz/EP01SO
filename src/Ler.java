@@ -5,6 +5,11 @@ import java.io.IOException;
 public class Ler {
     private static int [] prioridades = new int[10];
     public static int maximo;
+    final int numProcessos = 10;	//Número de processos do tipo XX.txt que serão lidos
+    
+    public int getNumProcessos() {
+    	return numProcessos;
+    }    
 
     //Com as prioridades em um vetor, apenas o maior é
     //buscado para servir de tamanho máximo na fila de
@@ -34,8 +39,7 @@ public class Ler {
 
         //Laço para ler os processos na fomra XX.txt. Por default, numProcessos = 10
         //Em paralelo, será lido as prioridades de 'prioridade.txt'.
-        int numProcessos = 10;
-        for (int i = 1; i <= numProcessos;  i++) {
+        for (int i = 1; i <= getNumProcessos();  i++) {
             StringBuffer buffer = new StringBuffer(40);
             String filename;
 
@@ -63,12 +67,10 @@ public class Ler {
             bcp[i - 1].setQuantum(1);
             
             //Laço para leitura de todos os comandos do processo 'i'.
-            int j = 0;
             while (linhaP != null) {
-                bcp[i - 1].setComando(linhaP, j++);
+                bcp[i - 1].setComando(linhaP);
                 linhaP = lerProcessos.readLine();
             }
-
             processos.close();
         }
         prioridadeMax();

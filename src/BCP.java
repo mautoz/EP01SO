@@ -1,7 +1,10 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class BCP {
 
     private String nome;        	//Linha 0 de cada processo é o Nome do Processo
-    private String [] comandos; 	//Armazenar as referências das instruçõe de cada processo
+    private List<String> comandos = new ArrayList<>(); //Armazenar as referências das instruçõe de cada processo
     private int prioridade;			//Dada pelo prioridade.txt
     private int CP;					//Armazena a posição em que parou a leitura das instruções de cada processo 
     private char estadoProcesso;	//(e)xecutando, (p)ronto ou (b)loqueado
@@ -13,7 +16,6 @@ public class BCP {
 
     public BCP(String nome){
         this.nome = nome;
-        comandos = new String[22];
     }
      /**
      * @return the nome
@@ -52,12 +54,12 @@ public class BCP {
         this.prioridade = p;
     }
 
-    public void setComando (String comandos, int i) {
-        this.comandos[i] = comandos;
+    public void setComando (String instrucao) {
+        comandos.add(instrucao);
     }
 
     public String getComando (int i) {
-        return comandos[i];
+        return comandos.get(i);
     }
 
     /**
@@ -113,6 +115,6 @@ public class BCP {
     }
     
     public int tamanhoComandos () {
-    	return comandos.length;
+    	return comandos.size();
     }
 }

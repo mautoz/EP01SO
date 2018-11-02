@@ -15,6 +15,7 @@ public class TabelaDeProcessos {
     	
     //Precisa inicializar cada uma das Array Lists
 	//É um Array de Arrays
+    @SuppressWarnings("unchecked")
     public void inicializaArrayList (int N) {
     	bloqueados = new ArrayList<>();
     	prontos = (ArrayList<BCP>[])new ArrayList[N + 1];
@@ -26,14 +27,15 @@ public class TabelaDeProcessos {
     //Processo é deixado de forma que fique em ordem alfabética
     //Como tinha que criar uma lista do maior para o menor, é necessário
     //fazer o 'm-posicao'. A última fila é dos processos com 0 créditos.
-    public void inserirProcessoPronto (ArrayList<BCP> [] b, BCP processo, int posicao, int m) {
-    	b[m - posicao].add(processo);
-        int i = b[m - posicao].size() - 1;
+    public void inserirProcessoPronto (TabelaDeProcessos t, BCP processo, int posicao, int m) {
+    	ArrayList<BCP> [] p = t.getProntos();
+    	p[m - posicao].add(processo);
+        int i = p[m - posicao].size() - 1;
 
         while (i > 0) {
-        	int j = b[m - posicao].indexOf(processo);
-        	if (b[m - posicao].get(j).getNome().compareTo(b[m - posicao].get(i - 1).getNome()) < 0) {
-        		Collections.swap(b[m - posicao], i - 1, j);
+        	int j = p[m - posicao].indexOf(processo);
+        	if (p[m - posicao].get(j).getNome().compareTo(p[m - posicao].get(i - 1).getNome()) < 0) {
+        		Collections.swap(p[m - posicao], i - 1, j);
             }
             i--;
         }

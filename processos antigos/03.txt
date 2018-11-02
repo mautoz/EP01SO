@@ -12,5 +12,4 @@ X=91
 Y=10
 COM
 X=4
-COM
 SAIDA
