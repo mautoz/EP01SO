@@ -46,7 +46,7 @@ public class Escrever {
 		gravarArq.println(S + " terminado. X=" + x + ". Y=" + y);
 	}
 
-	//Verificar que pode existir informações entre ( )
+	//Verificar que pode existir um comando COM anterior
 	public void escrevendoInterrompendoESCOM(String S, int n) throws IOException {
 		gravarArq = new PrintWriter(arq);
 		gravarArq.println("Interrompendo " + S + " após " + n + " instruções. (Havia um comando antes da E/S)");

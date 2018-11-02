@@ -2,7 +2,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BCP {
-
     private String nome;        	//Linha 0 de cada processo é o Nome do Processo
     private List<String> comandos = new ArrayList<>(); //Armazenar as referências das instruçõe de cada processo
     private int prioridade;			//Dada pelo prioridade.txt
@@ -17,17 +16,9 @@ public class BCP {
     public BCP(String nome){
         this.nome = nome;
     }
-     /**
-     * @return the nome
-     */
+
     public String getNome() {
         return nome;
-    }
-    /**
-     * @param nome the nome to set
-     */
-    public void setNome(String nome) {
-        this.nome = nome;
     }
 
     public int getQuantum() {
@@ -61,31 +52,23 @@ public class BCP {
     public String getComando (int i) {
         return comandos.get(i);
     }
-
-    /**
-     * @return the CP
-     */
+    
+    public int tamanhoComandos () {
+    	return comandos.size();
+    }    
+    
     public int getCP() {
         return CP;
     }
 
-    /**
-     * @param CP the CP to set
-     */
     public void setCP(int CP) {
         this.CP = CP;
     }
 
-    /**
-     * @return the estadoProcesso
-     */
     public char getEstadoProcesso() {
         return estadoProcesso;
     }
 
-    /**
-     * @param estadoProcesso the estadoProcesso to set
-     */
     public void setEstadoProcesso(char estadoProcesso) {
         this.estadoProcesso = estadoProcesso;
     }
@@ -112,9 +95,5 @@ public class BCP {
 
     public void setEstadoY(int y) {
         this.estadoY = y;
-    }
-    
-    public int tamanhoComandos () {
-    	return comandos.size();
     }
 }

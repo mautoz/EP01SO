@@ -13,7 +13,7 @@ public class TabelaDeProcessos {
     	return bloqueados;
     }
     	
-    //Precisa inicializar cada uma das Array Lists
+    //Precisa inicializar cada uma das ArrayLists
 	//É um Array de Arrays
     @SuppressWarnings("unchecked")
     public void inicializaArrayList (int N) {
@@ -46,10 +46,12 @@ public class TabelaDeProcessos {
         b.add(processo);
     }
 
+    //Remove o 'processo' na fila de prontos.
     public void removerProcessoPronto (ArrayList<BCP> [] p, BCP processo, int credito) {
         p[credito].remove(processo);
     }
 
+    //Remove os bloqueados
     public void removerProcessoBloqueado (ArrayList<BCP> b, BCP processo) {
         b.remove(processo);
     }
