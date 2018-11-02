@@ -32,9 +32,10 @@ public class Ler {
         prior = new FileReader("prioridades.txt");
         lerPrior = new BufferedReader(prior);
 
-        //Laço para ler do 01.txt até 10.txt. Em paralelo, será lido
-        //as prioridades de 'prioridade.txt'.
-        for (int i = 1; i < 11;  i++) {
+        //Laço para ler os processos na fomra XX.txt. Por default, numProcessos = 10
+        //Em paralelo, será lido as prioridades de 'prioridade.txt'.
+        int numProcessos = 10;
+        for (int i = 1; i <= numProcessos;  i++) {
             StringBuffer buffer = new StringBuffer(40);
             String filename;
 

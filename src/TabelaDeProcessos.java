@@ -2,11 +2,24 @@ import java.util.Collections;
 import java.util.ArrayList;
 
 public class TabelaDeProcessos {
+	public ArrayList<BCP> [] prontos;
+    public ArrayList<BCP> bloqueados;
+    
+    public ArrayList<BCP> [] getProntos () {
+    	return prontos;
+    }
+    
+    public ArrayList<BCP> getBloqueados () {
+    	return bloqueados;
+    }
+    	
     //Precisa inicializar cada uma das Array Lists
 	//É um Array de Arrays
-    public void inicializaArrayList (ArrayList<BCP> [] b, int N) {
-        for (int i = 0;  i < N; i++) {
-            b[i] = new ArrayList<>();
+    public void inicializaArrayList (int N) {
+    	bloqueados = new ArrayList<>();
+    	prontos = (ArrayList<BCP>[])new ArrayList[N + 1];
+        for (int i = 0;  i < N + 1; i++) {
+            prontos[i] = new ArrayList<>();
         }
     }
 
