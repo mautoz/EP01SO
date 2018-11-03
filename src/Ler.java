@@ -6,6 +6,10 @@ public class Ler {
     private static int [] prioridades = new int[10];
     public static int maximo;
     final int numProcessos = 10;	//Número de processos do tipo XX.txt que serão lidos
+
+    public Ler(){
+        prioridades = new int[numProcessos];
+    }
     
     public int getNumProcessos() {
     	return numProcessos;
@@ -27,7 +31,7 @@ public class Ler {
     	return maximo;
     }
 
-    //Toda a leitura dos 11 '.txt' é feita por aqui.
+    //Toda a leitura dos processos em '.txt' é feita por aqui.
     //Leitura do Quantum é feita pelo próprio Escalonador.java 
     //Nome do programa e prioridade são lidos em paralelo.
     public void lerArq (BCP [] bcp, Escalonador esc, Escrever escrever) throws IOException {
